@@ -1,11 +1,12 @@
+import json
+
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
 import pandas as pd
-import json
-from app import app
 import plotly.graph_objs as go
-import numpy as np
+from dash.dependencies import Input, Output
+
+from app import app
 
 layout = [
     # third Controls
@@ -72,6 +73,7 @@ def display_value(selected_dropdown_value, dataset):
             name=item + ' at MP 01',
             line=dict(
                 # color=('rgb(205, 12, 24)'),
+                dash='dash',
                 width=4)
         ))
         trace1.append(go.Scatter(
@@ -80,6 +82,7 @@ def display_value(selected_dropdown_value, dataset):
             name=item + ' at MP 02',
             line=dict(
                 # color=('rgb(22, 96, 167)'),
+                dash='dash',
                 width=4, )
         ))
         trace2.append(go.Scatter(
@@ -107,7 +110,7 @@ def display_value(selected_dropdown_value, dataset):
             line=dict(
                 # color=('rgb(205, 12, 24)'),
                 width=4,
-                dash='dot')
+                dash='dash')
         ))
         trace5.append(go.Scatter(
             x=MP_06['time'],
@@ -116,7 +119,7 @@ def display_value(selected_dropdown_value, dataset):
             line=dict(
                 # color=('rgb(22, 96, 167)'),
                 width=4,
-                dash='dot')
+                dash='dash')
         ))
         trace6.append(go.Scatter(
             x=MP_07['time'],
@@ -125,7 +128,7 @@ def display_value(selected_dropdown_value, dataset):
             line=dict(
                 #  color=('rgb(22, 96, 167)'),
                 width=4,
-                dash='dot')
+                dash='dash')
         ))
         trace7.append(go.Scatter(
             x=MP_08['time'],
@@ -134,7 +137,7 @@ def display_value(selected_dropdown_value, dataset):
             line=dict(
                 # color=('rgb(22, 96, 167)'),
                 width=4,
-                dash='dot')
+                dash='dash')
         ))
         trace8.append(go.Scatter(
             x=MP_09['time'],
@@ -143,7 +146,7 @@ def display_value(selected_dropdown_value, dataset):
             line=dict(
                 # color=('rgb(22, 96, 167)'),
                 width=4,
-                dash='dot')
+                dash='dash')
         ))
         trace9.append(go.Scatter(
             x=MP_10['time'],
@@ -158,14 +161,14 @@ def display_value(selected_dropdown_value, dataset):
     data = [val for sublist in traces for val in sublist]
 
     # Edit the layout
-    layout = dict(title='Segment data at measurement points',
+    layout = dict(title='Segment data at measurement points "{}"'.format(selected_dropdown_value),
                   xaxis={"title": "Date Time",
                          'rangeselector': {'buttons': list([
                              {'count': 1, 'label': '1M', 'step': 'minute', 'stepmode': 'backward'},
                              {'count': 10, 'label': '6M', 'step': 'minute', 'stepmode': 'backward'},
                              {'step': 'all'}
                          ])}, 'rangeslider': {'visible': True}, 'type': 'date'},
-                  yaxis=dict(title='Values'),
+                  # yaxis=dict(title='Values'),
                   margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
                   legend={'x': 0, 'y': 1},
                   hovermode='closest'
