@@ -5,6 +5,7 @@ from dash.dependencies import Input, Output
 from app import app
 from apps import app1, app2
 from segmentdata import *
+from measurment_data import *
 
 # dateset = read_segment_data_monitor()
 # data = json.loads(dataset)
@@ -27,10 +28,11 @@ app.layout = html.Div([
     html.Div(
         [
             dcc.Link('Segment Data Monitor', href='/apps/app1', className='button'),
-            dcc.Link('Process Data Monitor', href='/apps/app2', className='button'),
+            dcc.Link('Measurment Data Monitor', href='/apps/app2', className='button'),
         ], className="row", ),
     # Hidden divs to contain data
     html.Div(read_segment_data_monitor(), id="segment_dataset_df", style={'display': "none"}),
+    html.Div(read_measurment_data(), id="meas_dataset_df", style={'display': "none"}),
     html.Div(id='page-content')
 ])
 
