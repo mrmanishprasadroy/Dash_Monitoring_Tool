@@ -28,10 +28,9 @@ layout = [
         [
             dcc.Graph(
                 id="segment_plot",
-                # style={"height": "99%", "width": "100%"},
                 config=dict(displayModeBar=False),
             ),
-        ], className="row", style={"marginBottom": "10"}
+        ], className="sms_chart_div", style={"marginBottom": "10"}
     )
 ]
 
@@ -154,6 +153,9 @@ def display_value(item, dataset):
                              {'step': 'all'}
                          ])}, 'rangeslider': {'visible': True}, 'type': 'date'},
                   yaxis=dict(title='Values'),
+                  margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
+                  legend={'x': 0, 'y': 1},
+                  hovermode='closest'
                   )
 
     # Plot and embed
