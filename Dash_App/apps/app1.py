@@ -28,7 +28,7 @@ layout = [
         [
             dcc.Graph(
                 id="segment_plot",
-                style={"height": "99%", "width": "100%"},
+                # style={"height": "99%", "width": "100%"},
                 config=dict(displayModeBar=False),
             ),
         ], className="row", style={"marginBottom": "10"}
@@ -51,24 +51,24 @@ def display_value(item, dataset):
     MP_08 = pd.read_json(data['df_08'], orient='split')
     MP_09 = pd.read_json(data['df_09'], orient='split')
     MP_10 = pd.read_json(data['df_10'], orient='split')
-   # MP_01.to_csv('data', sep='\t', encoding='utf-8')
-   # index = pd.to_datetime(MP_02['time'], format="%Y-%m-%d %H:%M:%S.%f")
+    # MP_01.to_csv('data', sep='\t', encoding='utf-8')
+    # index = pd.to_datetime(MP_02['time'], format="%Y-%m-%d %H:%M:%S.%f")
 
     # Create and style traces
     trace0 = go.Scatter(
         x=MP_01['time'],
         y=MP_01[item],
-        name=item + 'at MP 01',
+        name=item + ' at MP 01',
         line=dict(
-            color=('rgb(205, 12, 24)'),
+            # color=('rgb(205, 12, 24)'),
             width=4)
     )
     trace1 = go.Scatter(
         x=MP_02['time'],
         y=MP_02[item],
-        name=item + 'at MP 02',
+        name=item + ' at MP 02',
         line=dict(
-            color=('rgb(22, 96, 167)'),
+            # color=('rgb(22, 96, 167)'),
             width=4, )
     )
     trace2 = go.Scatter(
@@ -76,70 +76,70 @@ def display_value(item, dataset):
         y=MP_03[item],
         name=item + 'at MP 03',
         line=dict(
-            color=('rgb(205, 12, 24)'),
+            # color=('rgb(205, 12, 24)'),
             width=4,
             dash='dash')  # dash options include 'dash', 'dot', and 'dashdot'
     )
     trace3 = go.Scatter(
         x=MP_04['time'],
         y=MP_04[item],
-        name=item + 'at MP 04',
+        name=item + ' at MP 04',
         line=dict(
-            color=('rgb(22, 96, 167)'),
+            # color=('rgb(22, 96, 167)'),
             width=4,
             dash='dash')
     )
     trace4 = go.Scatter(
         x=MP_05['time'],
         y=MP_05[item],
-        name=item + 'at MP 05',
+        name=item + ' at MP 05',
         line=dict(
-            color=('rgb(205, 12, 24)'),
+            # color=('rgb(205, 12, 24)'),
             width=4,
             dash='dot')
     )
     trace5 = go.Scatter(
         x=MP_06['time'],
         y=MP_06[item],
-        name=item + 'at MP 06',
+        name=item + ' at MP 06',
         line=dict(
-            color=('rgb(22, 96, 167)'),
+            # color=('rgb(22, 96, 167)'),
             width=4,
             dash='dot')
     )
     trace6 = go.Scatter(
         x=MP_07['time'],
         y=MP_07[item],
-        name=item + 'at MP 07',
+        name=item + ' at MP 07',
         line=dict(
-            color=('rgb(22, 96, 167)'),
+            #  color=('rgb(22, 96, 167)'),
             width=4,
             dash='dot')
     )
     trace7 = go.Scatter(
         x=MP_08['time'],
         y=MP_08[item],
-        name=item + 'at MP 08',
+        name=item + ' at MP 08',
         line=dict(
-            color=('rgb(22, 96, 167)'),
+            # color=('rgb(22, 96, 167)'),
             width=4,
             dash='dot')
     )
     trace8 = go.Scatter(
         x=MP_09['time'],
         y=MP_09[item],
-        name=item + 'at MP 09',
+        name=item + ' at MP 09',
         line=dict(
-            color=('rgb(22, 96, 167)'),
+            # color=('rgb(22, 96, 167)'),
             width=4,
             dash='dot')
     )
     trace9 = go.Scatter(
         x=MP_10['time'],
         y=MP_10[item],
-        name=item + 'at MP 10',
+        name=item + ' at MP 10',
         line=dict(
-            color=('rgb(22, 96, 167)'),
+            #  color=('rgb(22, 96, 167)'),
             width=4,
             dash='dot')
     )
@@ -147,7 +147,12 @@ def display_value(item, dataset):
 
     # Edit the layout
     layout = dict(title='Segment data at measurement points at {}'.format(item),
-                  xaxis=dict(title='Time Series'),
+                  xaxis={"title": "Date Time",
+                         'rangeselector': {'buttons': list([
+                             {'count': 1, 'label': '1M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'count': 10, 'label': '6M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'step': 'all'}
+                         ])}, 'rangeslider': {'visible': True}, 'type': 'date'},
                   yaxis=dict(title='Values'),
                   )
 
