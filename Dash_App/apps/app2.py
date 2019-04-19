@@ -45,6 +45,7 @@ def display_value(selected_value, dataset):
             x=df_bigdata['index'],
             y=df_bigdata[item],
             name=item,
+            text=df_bigdata[item],
             line=dict(
                 # color=('rgb(205, 12, 24)'),
                 # dash='dash',

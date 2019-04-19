@@ -236,18 +236,80 @@ def create_dataset(allTelegram):
                    x['TmSegStart'][3], x['TmSegStart'][4], x['TmSegStart'][5], x['TmSegStart'][6] * 1000)
           for x in allTelegram]
 
+    if allTelegram['SegId'].ndim == 1:
+        SegId = allTelegram['SegId'][:]
+    else:
+        SegId = allTelegram['SegId'][:, 0]
+
+    if allTelegram['SetupId'].ndim == 1:
+        SetupId = allTelegram['SetupId'][:]
+    else:
+        SetupId = allTelegram['SetupId'][:, 0]
+
+    if allTelegram['CoilId'].ndim == 1:
+        CoilId = allTelegram['CoilId'][:]
+    else:
+        CoilId = allTelegram['CoilId'][:, 0]
+
+    if allTelegram['CoilIdOut'].ndim == 1:
+        CoilIdOut = allTelegram['CoilIdOut'][:]
+    else:
+        CoilIdOut = allTelegram['CoilIdOut'][:, 0]
+
+    if allTelegram['LenSegStart'].ndim == 1:
+        LenSegStart = allTelegram['LenSegStart'][:]
+    else:
+        LenSegStart = allTelegram['LenSegStart'][:, 0]
+
+    if allTelegram['TmSinceThread'].ndim == 1:
+        TmSinceThread = allTelegram['TmSinceThread'][:]
+    else:
+        TmSinceThread = allTelegram['TmSinceThread'][:, 0]
+
+    if allTelegram['LenSeg'].ndim == 1:
+        LenSeg = allTelegram['LenSeg'][:]
+    else:
+        LenSeg = allTelegram['LenSeg'][:, 0]
+
+    if allTelegram['TmSeg'].ndim == 1:
+        TmSeg = allTelegram['TmSeg'][:]
+    else:
+        TmSeg = allTelegram['TmSeg'][:, 0]
+
+    if allTelegram['VolSeg'].ndim == 1:
+        VolSeg = allTelegram['VolSeg'][:]
+    else:
+        VolSeg = allTelegram['VolSeg'][:, 0]
+
+    if allTelegram['NumValSeg'].ndim == 1:
+        NumValSeg = allTelegram['NumValSeg'][:]
+    else:
+        NumValSeg = allTelegram['NumValSeg'][:, 0]
+
+    if allTelegram['PassNo'].ndim == 1:
+        PassNo = allTelegram['PassNo'][:]
+    else:
+        PassNo = allTelegram['PassNo'][:, 0]
+
+    if allTelegram['TmSegStart'].ndim == 1:
+        TmSegStart = allTelegram['TmSegStart'][:]
+    else:
+        TmSegStart = allTelegram['TmSegStart'][:, 0]
+
     df = pd.DataFrame({
         'time': ti,
-        'SegId': allTelegram['SegId'][:],
-        'SetupId': allTelegram['SetupId'][:],
-        'CoilId': allTelegram['CoilId'][:],
-        'CoilIdOut': allTelegram['CoilIdOut'][:],
-        'LenSegStart': allTelegram['LenSegStart'][:],
-        'TmSinceThread': allTelegram['TmSinceThread'][:],
-        'LenSeg': allTelegram['LenSeg'][:],
-        'TmSeg': allTelegram['TmSeg'][:],
-        'VolSeg': allTelegram['VolSeg'][:],
-        'NumValSeg': allTelegram['NumValSeg'][:]
+        'SegId': SegId,
+        'SetupId': SetupId,
+        'CoilId': CoilId,
+        'CoilIdOut': CoilIdOut,
+        'LenSegStart': LenSegStart,
+        'TmSinceThread': TmSinceThread,
+        'LenSeg': LenSeg,
+        'TmSeg': TmSeg,
+        'VolSeg': VolSeg,
+        'NumValSeg': NumValSeg,
+        'PassNo': PassNo,
+        'TmSegStart': TmSegStart
     })
 
     return df

@@ -53,6 +53,7 @@ def display_value(selected_value, dataset):
             x=df_bigdata['index'],
             y=df_bigdata[item],
             name=item,
+            text=df_bigdata[item],
             line=dict(
                 # color=('rgb(205, 12, 24)'),
                 # dash='dash',
@@ -96,6 +97,7 @@ def display_coil_value(selected_value, dataset):
         x=index,
         y=coil_1,
         name='Coil 1',
+        text=coil_1,
         line=dict(
             # color=('rgb(205, 12, 24)'),
             # dash='dash',
@@ -107,6 +109,7 @@ def display_coil_value(selected_value, dataset):
         x=index,
         y=coil_2,
         name='Coil 2',
+        text=coil_2,
         line=dict(
             # color=('rgb(205, 12, 24)'),
             # dash='dash',

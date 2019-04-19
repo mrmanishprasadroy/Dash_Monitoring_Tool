@@ -13,7 +13,7 @@ layout = [
     html.Div(
         [
             dcc.Dropdown(
-                id='item-list',
+                id='pitem-list',
                 options=[
                     {'label': '{}'.format(teltype_M21[i][0]), 'value': teltype_M21[i][0]} for i in range(0, 13)
                 ],
@@ -27,7 +27,7 @@ layout = [
     html.Div(
         [
             dcc.Graph(
-                id="segment_plot",
+                id="psegment_plot",
                 config=dict(displayModeBar=False),
             ),
         ], className="sms_chart_div", style={"marginBottom": "10"}
@@ -36,8 +36,8 @@ layout = [
 
 
 @app.callback(
-    Output('segment_plot', 'figure'),
-    [Input('item-list', 'value'), Input('segment_dataset_df', 'children')])
+    Output('psegment_plot', 'figure'),
+    [Input('pitem-list', 'value'), Input('process_dataset_df', 'children')])
 def display_value(selected_dropdown_value, dataset):
     data = json.loads(dataset)
     MP_01 = pd.read_json(data['df_01'], orient='split')

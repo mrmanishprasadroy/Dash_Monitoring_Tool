@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
-from apps import app1, app2, app3
+from apps import app1, app2, app3, app4
 from segmentdata import *
 from measurment_data import *
 from srtip_tracking_data import *
@@ -31,11 +31,13 @@ app.layout = html.Div([
             dcc.Link('Segment Data Monitor', href='/apps/app1', className='button'),
             dcc.Link('Measurment Data Monitor', href='/apps/app2', className='button'),
             dcc.Link('Strip Tracking Monitor', href='/apps/app3', className='button'),
+            dcc.Link('Process Data Monitor', href='/apps/app4', className='button'),
         ], className="row", ),
     # Hidden divs to contain data
     html.Div(read_segment_data_monitor(), id="segment_dataset_df", style={'display': "none"}),
     html.Div(read_measurment_data(), id="meas_dataset_df", style={'display': "none"}),
     html.Div(read_strip_tracking_data(), id="strip_dataset_df", style={'display': "none"}),
+    html.Div(read_segment_data_monitor(), id="process_dataset_df", style={'display': "none"}),
     html.Div(id='page-content')
 ])
 
@@ -49,6 +51,8 @@ def display_page(pathname):
         return app2.layout
     elif pathname == '/apps/app3':
         return app3.layout
+    elif pathname == '/apps/app4':
+        return app4.layout
     else:
         return app1.layout
 
