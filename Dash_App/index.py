@@ -3,14 +3,15 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
-from apps import app1, app2, app3, app4
+from apps import segment_data, measurement_data, strip_tracking, process_data
 from segmentdata import *
 from measurment_data import *
 from srtip_tracking_data import *
 
-# dateset = read_segment_data_monitor()
-# data = json.loads(dataset)
-# dff = pd.read_json(datasets['df_1'], orient='split')
+process_dateset = read_segment_data_monitor()
+meas_data = read_measurment_data()
+strip_dataset = read_strip_tracking_data()
+
 app.layout = html.Div([
     # header
     html.Div([
@@ -28,16 +29,16 @@ app.layout = html.Div([
     # indicators row div
     html.Div(
         [
-            dcc.Link('Segment Data Monitor', href='/apps/app1', className='button'),
-            dcc.Link('Measurment Data Monitor', href='/apps/app2', className='button'),
-            dcc.Link('Strip Tracking Monitor', href='/apps/app3', className='button'),
-            dcc.Link('Process Data Monitor', href='/apps/app4', className='button'),
+            dcc.Link('Segment Data Monitor', href='/apps/segment_data', className='button'),
+            dcc.Link('Measurment Data Monitor', href='/apps/measurement_data', className='button'),
+            dcc.Link('Strip Tracking Monitor', href='/apps/strip_tracking', className='button'),
+            dcc.Link('Process Data Monitor', href='/apps/process_data', className='button'),
         ], className="row", ),
     # Hidden divs to contain data
-    html.Div(read_segment_data_monitor(), id="segment_dataset_df", style={'display': "none"}),
-    html.Div(read_measurment_data(), id="meas_dataset_df", style={'display': "none"}),
-    html.Div(read_strip_tracking_data(), id="strip_dataset_df", style={'display': "none"}),
-    html.Div(read_segment_data_monitor(), id="process_dataset_df", style={'display': "none"}),
+    html.Div(process_dateset, id="segment_dataset_df", style={'display': "none"}),
+    html.Div(meas_data, id="meas_dataset_df", style={'display': "none"}),
+    html.Div(strip_dataset, id="strip_dataset_df", style={'display': "none"}),
+    html.Div(process_dateset, id="process_dataset_df", style={'display': "none"}),
     html.Div(id='page-content')
 ])
 
@@ -45,16 +46,16 @@ app.layout = html.Div([
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])
 def display_page(pathname):
-    if pathname == '/apps/app1':
-        return app1.layout
-    elif pathname == '/apps/app2':
-        return app2.layout
-    elif pathname == '/apps/app3':
-        return app3.layout
-    elif pathname == '/apps/app4':
-        return app4.layout
+    if pathname == '/apps/segment_data':
+        return segment_data.layout
+    elif pathname == '/apps/measurement_data':
+        return measurement_data.layout
+    elif pathname == '/apps/strip_tracking':
+        return strip_tracking.layout
+    elif pathname == '/apps/process_data':
+        return process_data.layout
     else:
-        return app1.layout
+        return segment_data.layout
 
 
 if __name__ == '__main__':

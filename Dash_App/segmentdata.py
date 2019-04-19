@@ -296,6 +296,11 @@ def create_dataset(allTelegram):
     else:
         TmSegStart = allTelegram['TmSegStart'][:, 0]
 
+    if allTelegram['SegType'].ndim == 1:
+        SegType = allTelegram['SegType'][:]
+    else:
+        SegType = allTelegram['SegType'][:, 0]
+
     df = pd.DataFrame({
         'time': ti,
         'SegId': SegId,
@@ -309,7 +314,8 @@ def create_dataset(allTelegram):
         'VolSeg': VolSeg,
         'NumValSeg': NumValSeg,
         'PassNo': PassNo,
-        'TmSegStart': TmSegStart
+        'TmSegStart': TmSegStart,
+        'SegType': SegType
     })
 
     return df
