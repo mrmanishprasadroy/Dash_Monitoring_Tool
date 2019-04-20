@@ -49,19 +49,16 @@ def read_unique_coil():
             alltimeIndex.append(datetime.fromtimestamp(os.path.getmtime(file)))
             f.close()
         elaps_time = "- %s seconds ---" % (time.time() - start_time)
-        print("N02: no data found time" + elaps_time)
+        print("N02:data found time" + elaps_time)
 
     else:
         print("N02: no data found")
 
-    arr_coilids = selTelegram_N02['CoilIdOut'][:]
-    coils = []
-    for coil in np.nditer(np.unique(arr_coilids)):
-        coils.append(coil)
-
-    df_coils = pd.DataFrame(np.unique(arr_coilids), columns=['coils'])
-
-    return df_coils
+    arr_coilids = pd.DataFrame(selTelegram_N02['CoilIdOut'][:], columns=['CoilIdOut'])
+    datasets = {
+        'df_00': arr_coilids.to_json(orient='split', date_format='iso'),
+    }
+    return json.dumps(datasets)
 
 
 def setup_data():
