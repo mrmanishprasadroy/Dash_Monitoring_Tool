@@ -20,7 +20,7 @@ layout = html.Div([
         value=coil_arr[0]
     ),
     # table div
-    html.Div(
+    dcc.Loading(id='table-view', children=html.Div(
         id="setup_table",
         className="row",
         style={
@@ -34,6 +34,7 @@ layout = html.Div([
 
         },
     ),
+                )
 ])
 
 
@@ -51,7 +52,7 @@ def leads_table_callback(df, value):
     datatable = dash_table.DataTable(
         columns=[{"name": i, "id": i} for i in df_bigdata.columns],
         data=df_bigdata.to_dict("rows"),
-        n_fixed_rows=1,
+        # n_fixed_rows=1,
         # filtering=True,
         sorting=True,
         style_cell={'width': '150px', 'padding': '5px', 'textAlign': 'center'},
