@@ -8,9 +8,9 @@ from pandas import DataFrame
 import time
 
 from telegram_definition_L1 import *
-
+from golabal_def import Dir_Path
 # telegram directory (default)
-tel_directory = 'D:\\SMS-Siemag\\Runtime\\JSW-CRC\\PLTCM\\TCM\\L2\\log\\tel'
+tel_directory = Dir_Path
 
 # initialisation
 

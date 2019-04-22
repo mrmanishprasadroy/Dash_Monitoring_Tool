@@ -8,11 +8,12 @@ from segmentdata import *
 from measurment_data import *
 from srtip_tracking_data import *
 from setup_data import *
+from coiler_exit_data import *
 
 process_dateset = read_segment_data_monitor()
 meas_data = read_measurment_data()
 strip_dataset = read_strip_tracking_data()
-
+coiler_dataset = read_data()
 # setup_dataset = setup_data()
 
 app.layout = html.Div([

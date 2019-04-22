@@ -4,8 +4,8 @@ import glob
 from datetime import datetime
 import numpy as np
 import pandas as pd
-
-tel_directory = 'D:\\SMS-Siemag\\Runtime\\JSW-CRC\\PLTCM\\TCM\\L2\\log\\tel'
+from golabal_def import Dir_Path
+tel_directory = Dir_Path
 
 messageId = {
     'MP00': 'EE13',
