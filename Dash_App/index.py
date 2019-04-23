@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
-from apps import segment_data, measurement_data, strip_tracking, process_data, setup_table
+from apps import segment_data, measurement_data, strip_tracking, process_data, setup_table, coiler_tracking
 from segmentdata import *
 from measurment_data import *
 from srtip_tracking_data import *
@@ -38,6 +38,7 @@ app.layout = html.Div([
             dcc.Link('Strip Tracking Monitor', href='/apps/strip_tracking', className='button'),
             dcc.Link('Process Data Monitor', href='/apps/process_data', className='button'),
             dcc.Link('Setup Data Monitor', href='/apps/setup_data', className='button'),
+            dcc.Link('Exit Area Monitor', href='/apps/exit_area', className='button'),
         ], className="row", ),
     # Hidden divs to contain data
     html.Div(process_dateset, id="segment_dataset_df", style={'display': "none"}),
@@ -45,6 +46,7 @@ app.layout = html.Div([
     html.Div(strip_dataset, id="strip_dataset_df", style={'display': "none"}),
     html.Div(process_dateset, id="process_dataset_df", style={'display': "none"}),
     html.Div(setup_data(), id="setup_dataset_df", style={'display': "none"}),
+    html.Div(coiler_dataset, id="coiler_dataset_df", style={'display': "none"}),
     html.Div(id='page-content')
 ])
 
@@ -62,6 +64,8 @@ def display_page(pathname):
         return process_data.layout
     elif pathname == '/apps/setup_data':
         return setup_table.layout
+    elif pathname == '/apps/exit_area':
+        return coiler_tracking.layout
     else:
         return segment_data.layout
 

@@ -7,6 +7,7 @@ import pandas as pd
 from datetime import datetime
 from telegram_definition_L1 import *
 from golabal_def import Dir_Path
+import json
 
 # telegram directory (default)
 
@@ -70,6 +71,7 @@ def determine_display_color(name):
 
 def read_data():
     global allTelegram_MP10
+    timeIndex = []
 
     allTelegram_MP10 = np.array([], dtype=teltype_M24)
 
@@ -85,6 +87,7 @@ def read_data():
             f = open(file, 'rb')
             oneTelegram = np.fromfile(f, dtype=teltype_M24)
             allTelegram_MP10 = np.concatenate((allTelegram_MP10, oneTelegram))
+            timeIndex.append(datetime.fromtimestamp(os.path.getmtime(file)))
             f.close()
         print("MP 10: reading of data done")
     else:
@@ -121,7 +124,8 @@ def read_data():
             'coil_id_out_2': coil_id_out_2,
             'strip_length_1': strip_length_1,
             'strip_length_2': strip_length_2,
-            'coiler_in_use': coiler_in_use}
+            'coiler_in_use': coiler_in_use,
+            'timeIndex': timeIndex}
 
     cols = ['coil_id_in_1',
             'coil_id_out_1',
@@ -129,55 +133,13 @@ def read_data():
             'coil_id_out_2',
             'strip_length_1',
             'strip_length_2',
-            'coiler_in_use']
+            'coiler_in_use',
+            'timeIndex']
 
-    df_MP10 = pd.DataFrame(data, columns=cols, index=ti_MP10)
+    df_MP10 = pd.DataFrame(data, columns=cols)
 
-    df_MP10['display_value'] = 0
+    dataset = {
+        'df_01': df_MP10.to_json(orient='split', date_format='iso')
+    }
 
-    # display coil id for coiler 1 -------------------------------------------
-
-    display_value = {}
-    display_color = {}
-
-    last_display_value = 0
-    last_display_color = ''
-
-    for name, group in df_MP10.groupby(['coil_id_in_1', 'coil_id_out_1']):
-        determine_display_value(name)
-        determine_display_color(name)
-
-        df_MP10.ix[(df_MP10['coil_id_in_1'] == name[0]) | (df_MP10['coil_id_out_1'] == name[1]), 'display_value'] = \
-            display_value[name]
-
-        display_frame = group.copy()
-        display_frame['display_value'] = display_value[name] + 0.0
-    df_coil1 = pd.DataFrame({
-            'index': display_frame['display_value'].index,
-            'value': display_frame['display_value']
-        })
-
-    # display coil id for coiler 2 -------------------------------------------
-
-    display_value = {}
-    display_color = {}
-
-    last_display_value = 0
-    last_display_color = ''
-
-    for name, group in df_MP10.groupby(['coil_id_in_2', 'coil_id_out_2']):
-        determine_display_value(name)
-        determine_display_color(name)
-
-        df_MP10.ix[(df_MP10['coil_id_in_2'] == name[0]) | (df_MP10['coil_id_out_2'] == name[1]), 'display_value'] = \
-            display_value[name]
-
-        display_frame = group.copy()
-        display_frame['display_value'] = display_value[name] + 0.0
-
-    df_coil2 = pd.DataFrame({
-            'index': display_frame['display_value'].index,
-            'value': display_frame['display_value']
-        })
-
-    return  df_MP10
+    return json.dumps(dataset)
