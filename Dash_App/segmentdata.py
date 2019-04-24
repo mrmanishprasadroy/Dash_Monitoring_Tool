@@ -153,7 +153,6 @@ def read_segment_data_monitor():
 
     df_MP06 = create_dataset(allTelegram_MP06)
 
-    df_MP01 = create_dataset(allTelegram_MP01)
     # MP 07 ----------------------------------------------------------------
 
     filelist = glob.glob(tel_directory_MP07)

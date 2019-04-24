@@ -7,8 +7,8 @@ from app import app
 import pandas as pd
 from setup_data import *
 
-df = read_unique_coil()
-data = json.loads(df)
+df_setup = setup_data()
+data = json.loads(df_setup)
 coils = pd.read_json(data['df_00'], orient='split')
 coil_arr = coils.CoilIdOut.unique()
 layout = html.Div([
@@ -41,10 +41,10 @@ layout = html.Div([
 # update table based on drop down value and df updates
 @app.callback(
     Output("setup_table", "children"),
-    [Input("setup_dataset_df", "children"), Input("coilId", "value")]
+    [Input("coilId", "value")]
 )
-def leads_table_callback(df, value):
-    data = json.loads(df)
+def leads_table_callback(value):
+    data = json.loads(df_setup)
     df_bigdata = pd.read_json(data['df_01'], orient='split')
 
     df_bigdata = df_bigdata.loc[df_bigdata['CoilIdOut'] == value]

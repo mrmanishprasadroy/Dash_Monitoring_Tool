@@ -25,42 +25,6 @@ messageId = {
 }
 
 
-def read_unique_coil():
-    # initialisation
-    start_time = time.time()
-    allTelegram_N02 = np.array([], dtype=teltype_N02)
-    selTelegram_N02 = np.array([], dtype=teltype_N02)
-    # specificy telegram type
-    tel_directory_N02 = tel_directory + '\\*' + messageId["N02"] + '*.tel'
-
-    # get list of available files
-
-    filelist = glob.glob(tel_directory_N02)
-
-    # sort  file list
-
-    filelist.sort(key=lambda x: os.path.getmtime(x))
-
-    if len(filelist) > 0:
-        for file in filelist:
-            f = open(file, 'rb')
-            one_telegram = np.fromfile(f, dtype=teltype_N02)
-            selTelegram_N02 = np.concatenate((selTelegram_N02, one_telegram))
-            alltimeIndex.append(datetime.fromtimestamp(os.path.getmtime(file)))
-            f.close()
-        elaps_time = "- %s seconds ---" % (time.time() - start_time)
-        print("N02:data found time" + elaps_time)
-
-    else:
-        print("N02: no data found")
-
-    arr_coilids = pd.DataFrame(selTelegram_N02['CoilIdOut'][:], columns=['CoilIdOut'])
-    datasets = {
-        'df_00': arr_coilids.to_json(orient='split', date_format='iso'),
-    }
-    return json.dumps(datasets)
-
-
 def setup_data():
     # initialisation
     start_time = time.time()
@@ -85,7 +49,7 @@ def setup_data():
             timeIndex.append(datetime.fromtimestamp(os.path.getmtime(file)))
             f.close()
         elaps_time = "- %s seconds ---" % (time.time() - start_time)
-        print("N02: no data found time" + elaps_time)
+        print("N02:  data found time" + elaps_time)
 
     else:
         print("N02: no data found")
@@ -337,8 +301,12 @@ def setup_data():
                                  df_BendIRDS, df_ShiftCVC, df_SlipForward, df_HydPosOS, df_HydPosDS, df_DriveTorque,
                                  df_chem],
                                 axis=1, sort=False)
+    arr_coilids = pd.DataFrame(selTelegram_N02['CoilIdOut'][:], columns=['CoilIdOut'])
 
     datasets = {
+        'df_00': arr_coilids.to_json(orient='split', date_format='iso'),
         'df_01': export_database.to_json(orient='split', date_format='iso'),
     }
+    elaps1_time = "- %s seconds ---" % (time.time() - start_time)
+    print(elaps1_time + 'setup_data compile')
     return json.dumps(datasets)

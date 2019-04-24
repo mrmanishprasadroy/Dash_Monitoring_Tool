@@ -45,7 +45,7 @@ app.layout = html.Div([
     html.Div(meas_data, id="meas_dataset_df", style={'display': "none"}),
     html.Div(strip_dataset, id="strip_dataset_df", style={'display': "none"}),
     html.Div(process_dateset, id="process_dataset_df", style={'display': "none"}),
-    html.Div(setup_data(), id="setup_dataset_df", style={'display': "none"}),
+    # html.Div(setup_data(), id="setup_dataset_df", style={'display': "none"}),
     html.Div(coiler_dataset, id="coiler_dataset_df", style={'display': "none"}),
     html.Div(id='page-content')
 ])
