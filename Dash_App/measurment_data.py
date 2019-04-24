@@ -54,7 +54,8 @@ def read_measurment_data():
               'FcsActive G2',
               'FcsActive G3',
               'FcsActive G4',
-              'FcsActive G5']
+              'FcsActive G5',
+              'timeIndex']
 
     # data selection
 
@@ -75,6 +76,7 @@ def read_measurment_data():
     arr_53 = allTelegram_M26['FcsActive'][:, 2]
     arr_54 = allTelegram_M26['FcsActive'][:, 3]
     arr_55 = allTelegram_M26['FcsActive'][:, 4]
+    arr_56 = timeIndex
 
     arr_1 = arr_11
 
@@ -93,6 +95,7 @@ def read_measurment_data():
     arr_5 = np.column_stack([arr_5, arr_53])
     arr_5 = np.column_stack([arr_5, arr_54])
     arr_5 = np.column_stack([arr_5, arr_55])
+    arr_5 = np.column_stack([arr_5, arr_56])
 
     # creation of data frame
     df_thickness = pd.DataFrame(arr_1, columns=cols_1, index=timeIndex)

@@ -50,7 +50,7 @@ def display_value(selected_value, dataset):
     for item in selected_value:
         # Create and style traces
         trace0.append(go.Scatter(
-            x=df_bigdata['index'],
+            x=df_bigdata['timeIndex'],
             y=df_bigdata[item],
             name=item,
             text=df_bigdata[item],
@@ -89,7 +89,7 @@ def display_coil_value(selected_value, dataset):
     data = json.loads(dataset)
     df_bigdata = pd.read_json(data['df_01'], orient='split')
     df_bigdata = df_bigdata.reset_index()
-    index = df_bigdata['index']
+    index = df_bigdata['timeIndex']
     coil_1 = df_bigdata['Coil 1']
     coil_2 = df_bigdata['Coil 2']
     # Create and style traces

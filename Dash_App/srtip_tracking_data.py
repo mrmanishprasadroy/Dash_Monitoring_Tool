@@ -39,33 +39,39 @@ def read_strip_tracking_data():
         print("M10: no data found")
 
     cols_1 = ['Coil 1',
-              'Coil 2']
+              'Coil 2',
+              'timeIndex']
 
     cols_2 = ['Stand 1',
               'Stand 2',
               'Stand 3',
               'Stand 4',
-              'Stand 5']
+              'Stand 5',
+              'timeIndex']
 
     # data selection
 
     arr_11 = allTelegram_M10['InMillDistSyncToStripEnd'][:, 0]
     arr_12 = allTelegram_M10['InMillDistSyncToStripEnd'][:, 1]
+    arr_13 = timeIndex
 
     arr_21 = allTelegram_M10['InMillExitLengthAtStand'][:, 0]
     arr_22 = allTelegram_M10['InMillExitLengthAtStand'][:, 1]
     arr_23 = allTelegram_M10['InMillExitLengthAtStand'][:, 2]
     arr_24 = allTelegram_M10['InMillExitLengthAtStand'][:, 3]
     arr_25 = allTelegram_M10['InMillExitLengthAtStand'][:, 4]
+    arr_26 = timeIndex
 
     arr_1 = arr_11
     arr_1 = np.column_stack([arr_1, arr_12])
+    arr_1 = np.column_stack([arr_1, arr_13])
 
     arr_2 = arr_21
     arr_2 = np.column_stack([arr_2, arr_22])
     arr_2 = np.column_stack([arr_2, arr_23])
     arr_2 = np.column_stack([arr_2, arr_24])
     arr_2 = np.column_stack([arr_2, arr_25])
+    arr_2 = np.column_stack([arr_2, arr_26])
 
     # creation of data frame
     df_coils = pd.DataFrame(arr_1, columns=cols_1, index=timeIndex)

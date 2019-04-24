@@ -42,7 +42,7 @@ def display_value(selected_value, dataset):
     for item in selected_value:
         # Create and style traces
         trace0.append(go.Scatter(
-            x=df_bigdata['index'],
+            x=df_bigdata['timeIndex'],
             y=df_bigdata[item],
             name=item,
             text=df_bigdata[item],
