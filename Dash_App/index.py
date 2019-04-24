@@ -3,12 +3,13 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
-from apps import segment_data, measurement_data, strip_tracking, process_data, setup_table, coiler_tracking
+from apps import segment_data, measurement_data, strip_tracking, process_data, setup_table, coiler_tracking, coilid_tracking
 from segmentdata import *
 from measurment_data import *
 from srtip_tracking_data import *
 from setup_data import *
 from coiler_exit_data import *
+from coil_id_tracking_data import *
 
 process_dateset = read_segment_data_monitor()
 meas_data = read_measurment_data()
@@ -39,14 +40,15 @@ app.layout = html.Div([
             dcc.Link('Process Data Monitor', href='/apps/process_data', className='button'),
             dcc.Link('Setup Data Monitor', href='/apps/setup_data', className='button'),
             dcc.Link('Exit Area Monitor', href='/apps/exit_area', className='button'),
+            dcc.Link('Coil Id Tracking', href='/apps/coilid_tracking', className='button'),
         ], className="row", ),
     # Hidden divs to contain data
     html.Div(process_dateset, id="segment_dataset_df", style={'display': "none"}),
     html.Div(meas_data, id="meas_dataset_df", style={'display': "none"}),
     html.Div(strip_dataset, id="strip_dataset_df", style={'display': "none"}),
     html.Div(process_dateset, id="process_dataset_df", style={'display': "none"}),
-    # html.Div(setup_data(), id="setup_dataset_df", style={'display': "none"}),
     html.Div(coiler_dataset, id="coiler_dataset_df", style={'display': "none"}),
+    html.Div(read_coilid_data(), id="coilTrack_dataset_df", style={'display': "none"}),
     html.Div(id='page-content')
 ])
 
@@ -66,6 +68,8 @@ def display_page(pathname):
         return setup_table.layout
     elif pathname == '/apps/exit_area':
         return coiler_tracking.layout
+    elif pathname == '/apps/coilid_tracking':
+        return coilid_tracking.layout
     else:
         return segment_data.layout
 
