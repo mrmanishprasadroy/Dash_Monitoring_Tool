@@ -6,6 +6,9 @@ import dash_table
 from app import app
 import pandas as pd
 from setup_data import *
+import flask
+import io
+from flask import send_file
 
 df_setup = setup_data()
 data = json.loads(df_setup)
@@ -19,6 +22,7 @@ layout = html.Div([
         ],
         value=coil_arr[0]
     ),
+    html.A('Download Whole Dataset', id='my-link', className='button'),
     # table div
     dcc.Loading(id='table-view', children=html.Div(
         id="setup_table",
@@ -70,3 +74,28 @@ def leads_table_callback(value):
         },
     )
     return datatable
+
+
+@app.callback(Output('my-link', 'href'), [Input('coilId', 'value')])
+def update_link(value):
+    return '/dash/urlToDownload?value={}'.format(1)
+
+
+@app.server.route('/dash/urlToDownload')
+def download_csv():
+    value = flask.request.args.get('value')
+    data = json.loads(df_setup)
+    df = pd.read_json(data['df_01'], orient='split')
+    buf = io.BytesIO()
+    excel_writer = pd.ExcelWriter(buf, engine="xlsxwriter")
+    df.to_excel(excel_writer, sheet_name="sheet1", index=False)
+    excel_writer.save()
+    excel_data = buf.getvalue()
+    buf.seek(0)
+    return send_file(
+        buf,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        attachment_filename="wholeDataset.xlsx",
+        as_attachment=True,
+        cache_timeout=0
+    )
