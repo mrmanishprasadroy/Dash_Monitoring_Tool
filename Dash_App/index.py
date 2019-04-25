@@ -75,4 +75,4 @@ def display_page(pathname):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host='10.182.10.162', debug=True)
