@@ -15,14 +15,21 @@ data = json.loads(df_setup)
 coils = pd.read_json(data['df_00'], orient='split')
 coil_arr = coils.CoilIdOut.unique()
 layout = html.Div([
-    dcc.Dropdown(
-        id='coilId',
-        options=[
-            {'label': '{}'.format(i), 'value': i} for i in coil_arr
-        ],
-        value=coil_arr[0]
-    ),
-    html.A('Download Whole Dataset', id='my-link', className='button'),
+    html.Div([
+        html.Div(
+            dcc.Dropdown(
+                id='coilId',
+                options=[
+                    {'label': '{}'.format(i), 'value': i} for i in coil_arr
+                    ],
+                value=coil_arr[0]
+            ), className="four columns",
+        ),
+        html.Div(
+            html.A('Download Whole Dataset', id='my-link', className='button button-primary'), className="four columns"
+        ),
+    ], className="row"),
+
     # table div
     dcc.Loading(id='table-view', children=html.Div(
         id="setup_table",

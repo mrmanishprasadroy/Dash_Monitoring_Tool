@@ -34,13 +34,13 @@ app.layout = html.Div([
     # indicators row div
     html.Div(
         [
-            dcc.Link('Segment Data Monitor', href='/apps/segment_data', className='button'),
-            dcc.Link('Measurment Data Monitor', href='/apps/measurement_data', className='button'),
-            dcc.Link('Strip Tracking Monitor', href='/apps/strip_tracking', className='button'),
-            dcc.Link('Process Data Monitor', href='/apps/process_data', className='button'),
-            dcc.Link('Setup Data Monitor', href='/apps/setup_data', className='button'),
-            dcc.Link('Exit Area Monitor', href='/apps/exit_area', className='button'),
-            dcc.Link('Coil Id Tracking', href='/apps/coilid_tracking', className='button'),
+            dcc.Link('Segment Data Monitor', href='/apps/segment_data', className='button button-primary'),
+            dcc.Link('Measurment Data Monitor', href='/apps/measurement_data', className='button button-primary'),
+            dcc.Link('Strip Tracking Monitor', href='/apps/strip_tracking', className='button button-primary'),
+            dcc.Link('Process Data Monitor', href='/apps/process_data', className='button button-primary'),
+            dcc.Link('Setup Data Monitor', href='/apps/setup_data', className='button button-primary'),
+            dcc.Link('Exit Area Monitor', href='/apps/exit_area', className='button button-primary'),
+            dcc.Link('Coil Id Tracking', href='/apps/coilid_tracking', className='button button-primary'),
         ], className="row", ),
     # Hidden divs to contain data
     html.Div(process_dateset, id="segment_dataset_df", style={'display': "none"}),
@@ -75,4 +75,4 @@ def display_page(pathname):
 
 
 if __name__ == '__main__':
-    app.run_server(host='10.182.10.162', debug=True)
+    app.run_server(host='127.0.0.1', debug=True)
