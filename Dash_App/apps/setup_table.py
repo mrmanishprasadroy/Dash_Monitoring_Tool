@@ -97,7 +97,6 @@ def download_csv():
     excel_writer = pd.ExcelWriter(buf, engine="xlsxwriter")
     df.to_excel(excel_writer, sheet_name="sheet1", index=False)
     excel_writer.save()
-    excel_data = buf.getvalue()
     buf.seek(0)
     return send_file(
         buf,

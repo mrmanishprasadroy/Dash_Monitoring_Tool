@@ -39,7 +39,7 @@ def read_coilid_data():
     # sort file list
     filelist.sort(key=lambda x: os.path.getmtime(x))
 
-    if (len(filelist) > 0):
+    if len(filelist) > 0:
         for file in filelist:
             f = open(file, 'rb')
             oneTelegram = np.fromfile(f, dtype=teltype_M06)
