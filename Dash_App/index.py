@@ -3,13 +3,13 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
-from apps import segment_data, measurement_data, strip_tracking, process_data, setup_table, coiler_tracking, coilid_tracking
-from segmentdata import *
-from measurment_data import *
-from srtip_tracking_data import *
-from setup_data import *
-from coiler_exit_data import *
+from apps import segment_data, measurement_data, strip_tracking, process_data, setup_table, coiler_tracking, \
+    coilid_tracking
 from coil_id_tracking_data import *
+from coiler_exit_data import *
+from measurment_data import *
+from segmentdata import *
+from srtip_tracking_data import *
 
 process_dateset = read_segment_data_monitor()
 meas_data = read_measurment_data()

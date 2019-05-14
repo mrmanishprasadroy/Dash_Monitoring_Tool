@@ -90,8 +90,8 @@ def display_coil_value(selected_value, dataset):
     df_bigdata = pd.read_json(data['df_01'], orient='split')
     df_bigdata = df_bigdata.reset_index()
     index = df_bigdata['timeIndex']
-    coil_1 = df_bigdata['Coil 1']
-    coil_2 = df_bigdata['Coil 2']
+    coil_1 = df_bigdata['Coil 1'] / 1000
+    coil_2 = df_bigdata['Coil 2'] / 1000
     # Create and style traces
     trace0 = go.Scatter(
         x=index,

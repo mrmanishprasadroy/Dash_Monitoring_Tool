@@ -45,7 +45,7 @@ layout = html.Div([
 def display_value(selected_value, dataset):
     data = json.loads(dataset)
     df_bigdata = pd.read_json(data['df_01'], orient='split')
-   # df_bigdata = df_bigdata.reset_index()
+    # df_bigdata = df_bigdata.reset_index()
     df_bigdata = df_bigdata.sort_values('timeIndex')
     trace0 = []
     for item in selected_value:
@@ -89,7 +89,7 @@ def display_value(selected_value, dataset):
 def display_coil_value(selected_value, dataset):
     data = json.loads(dataset)
     df_bigdata = pd.read_json(data['df_01'], orient='split')
-   # df_bigdata = df_bigdata.reset_index()
+    # df_bigdata = df_bigdata.reset_index()
     df_bigdata = df_bigdata.sort_values('timeIndex')
     index = df_bigdata['timeIndex']
     coil_1 = df_bigdata['coil_id_out_1']
@@ -102,7 +102,7 @@ def display_coil_value(selected_value, dataset):
         text=coil_1,
         line=dict(
             # color=('rgb(205, 12, 24)'),
-             dash='dash',
+            dash='dash',
             width=4)
     )
 
