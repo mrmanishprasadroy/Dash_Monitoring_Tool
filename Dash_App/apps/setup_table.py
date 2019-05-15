@@ -4,49 +4,73 @@ from dash.dependencies import Input, Output
 import json
 import dash_table
 from app import app
-import pandas as pd
+import redis
+import tasks
 from setup_data import *
 import flask
 import io
 from flask import send_file
 
-df_setup = setup_data()
+redis_instance = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
+
+tasks.update_setup_data()
+
+
+def get_dataframe():
+    """Retrieve the dataframe from Redis
+    This dataframe is periodically updated through the redis task
+    """
+    jsonified_df = redis_instance.hget(
+        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["DATASETUP"]
+    ).decode("utf-8")
+    # df = pd.DataFrame(json.loads(jsonified_df))
+    return json.loads(jsonified_df)
+
+
+df_setup = get_dataframe()
 data = json.loads(df_setup)
 coils = pd.read_json(data['df_00'], orient='split')
 coil_arr = coils.CoilIdOut.unique()
-layout = html.Div([
-    html.Div([
-        html.Div(
-            dcc.Dropdown(
-                id='coilId',
-                options=[
-                    {'label': '{}'.format(i), 'value': i} for i in coil_arr
+
+
+def serve_layout():
+    return html.Div([
+        html.Div([
+            html.Div(
+                dcc.Dropdown(
+                    id='coilId',
+                    options=[
+                        {'label': '{}'.format(i), 'value': i} for i in coil_arr
                     ],
-                value=coil_arr[0]
-            ), className="four columns",
-        ),
-        html.Div(
-            html.A('Download Whole Dataset', id='my-link', className='button button-primary'), className="four columns"
-        ),
-    ], className="row"),
+                    value=coil_arr[0]
+                ), className="four columns",
+            ),
+            html.Div(
+                html.A('Download Whole Dataset', id='my-link', className='button button-primary'),
+                className="four columns"
+            ),
+            html.Div(id="status"),
+        ], className="row"),
 
-    # table div
-    dcc.Loading(id='table-view', children=html.Div(
-        id="setup_table",
-        className="row",
-        style={
-            "maxHeight": "650px",
-            "overflowY": "scroll",
-            "padding": "8",
-            "marginTop": "15",
-            "backgroundColor": "white",
-            "border": "1px solid #C8D4E3",
-            "borderRadius": "3px"
+        # Interval
+        dcc.Interval(interval=30 * 1000, id="interval"),
+        # table div
+        dcc.Loading(id='table-view', children=html.Div(
+            id="setup_table",
+            className="row",
+            style={
+                "maxHeight": "650px",
+                "overflowY": "scroll",
+                "padding": "8",
+                "marginTop": "15",
+                "backgroundColor": "white",
+                "border": "1px solid #C8D4E3",
+                "borderRadius": "3px"
 
-        },
-    ),
-                )
-])
+            },
+        ),
+                    )
+    ])
 
 
 # update table based on drop down value and df updates
@@ -105,3 +129,21 @@ def download_csv():
         as_attachment=True,
         cache_timeout=0
     )
+
+
+@app.callback(
+    Output("status", "children"),
+    [Input("coilId", "value"), Input("interval", "n_intervals")],
+)
+def update_status(value, _):
+    global df_setup
+    global coil_arr
+    df_setup = get_dataframe()
+    data = json.loads(df_setup)
+    coils = pd.read_json(data['df_00'], orient='split')
+    coil_arr = coils.CoilIdOut.unique()
+    data_last_updated = redis_instance.hget(
+        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["DATE_UPDATED"]
+    ).decode("utf-8")
+
+    return "Data last updated at {}".format(data_last_updated)

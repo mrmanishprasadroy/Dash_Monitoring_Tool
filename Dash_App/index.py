@@ -65,7 +65,7 @@ def display_page(pathname):
     elif pathname == '/apps/process_data':
         return process_data.layout
     elif pathname == '/apps/setup_data':
-        return setup_table.layout
+        return setup_table.serve_layout()
     elif pathname == '/apps/exit_area':
         return coiler_tracking.layout
     elif pathname == '/apps/coilid_tracking':

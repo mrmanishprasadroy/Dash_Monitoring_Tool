@@ -1,6 +1,6 @@
 import glob
 import os
-from datetime import datetime
+import datetime
 import json
 import numpy as np
 import pandas as pd
@@ -47,7 +47,7 @@ def setup_data():
             f = open(file, 'rb')
             one_telegram = np.fromfile(f, dtype=teltype_N02)
             selTelegram_N02 = np.concatenate((selTelegram_N02, one_telegram))
-            timeIndex.append(datetime.fromtimestamp(os.path.getmtime(file)))
+            timeIndex.append(datetime.datetime.fromtimestamp(os.path.getmtime(file)))
             f.close()
         elaps_time = "- %s seconds ---" % (time.time() - start_time)
         print("N02:  data found time" + elaps_time)
