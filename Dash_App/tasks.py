@@ -15,7 +15,7 @@ REDIS_KEYS = {"DATASETUP": "DATASETUP", "DATE_UPDATED": "DATE_UPDATED"}
 def setup_periodic_tasks(sender, **kwargs):
     print("----> setup_periodic_tasks")
     sender.add_periodic_task(
-        50,  # seconds
+        60,  # seconds
         # an alternative to the @app.task decorator:
         # wrap the function in the app.task function
         update_setup_data.s(),

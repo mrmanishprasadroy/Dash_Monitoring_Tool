@@ -31,6 +31,7 @@ def setup_data():
     start_time = time.time()
     allTelegram_N02 = np.array([], dtype=teltype_N02)
     selTelegram_N02 = np.array([], dtype=teltype_N02)
+    timeIndex = []
     # specificy telegram type
     tel_directory_N02 = tel_directory + '\\*' + messageId["N02"] + '*.tel'
 
