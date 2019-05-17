@@ -5,44 +5,68 @@ import plotly.graph_objs as go
 import json
 from app import app
 import pandas as pd
+import os
+import redis
+import tasks
 
-layout = html.Div([
-    dcc.Dropdown(
-        id='exitarea-dropdown',
-        options=[
-            {'label': '{}'.format(i), 'value': i} for i in [
-                'strip_length_1', 'strip_length_2', 'coiler_in_use'
-            ]
-        ],
-        multi=True,
-        value=['strip_length_1', 'strip_length_2']
-    ),
-    # Chart Container
-    html.Div(
-        [
-            dcc.Graph(
-                id="exit_plot",
-                config=dict(displayModeBar=False),
-            ),
-        ], className="row", style={"marginBottom": "10"}
-    ),
+redis_instance = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
 
-    # Chart Container
-    html.Div(
-        [
-            dcc.Graph(
-                id="coilid_plot",
-                config=dict(displayModeBar=False),
-            ),
-        ], className="row", style={"marginBottom": "10"}
-    )
-])
+tasks.update_coiler_data()
+
+
+def get_dataframe():
+    """Retrieve the dataframe from Redis
+    This dataframe is periodically updated through the redis task
+    """
+    jsonified_df = redis_instance.hget(
+        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["COILERDATA"]
+    ).decode("utf-8")
+    # df = pd.DataFrame(json.loads(jsonified_df))
+    return json.loads(jsonified_df)
+
+
+def serve_layout():
+    return html.Div([
+        dcc.Dropdown(
+            id='exitarea-dropdown',
+            options=[
+                {'label': '{}'.format(i), 'value': i} for i in [
+                    'strip_length_1', 'strip_length_2', 'coiler_in_use'
+                ]
+            ],
+            multi=True,
+            value=['strip_length_1', 'strip_length_2']
+        ),
+        html.Div(id="status_coiler"),
+        # Interval
+        dcc.Interval(interval=30 * 1000, id="interval_coiler"),
+        # Chart Container
+        html.Div(
+            [
+                dcc.Graph(
+                    id="exit_plot",
+                    config=dict(displayModeBar=False),
+                ),
+            ], className="row", style={"marginBottom": "10"}
+        ),
+
+        # Chart Container
+        html.Div(
+            [
+                dcc.Graph(
+                    id="coilid_plot",
+                    config=dict(displayModeBar=False),
+                ),
+            ], className="row", style={"marginBottom": "10"}
+        )
+    ])
 
 
 @app.callback(
     Output('exit_plot', 'figure'),
-    [Input('exitarea-dropdown', 'value'), Input('coiler_dataset_df', 'children')])
-def display_value(selected_value, dataset):
+    [Input('exitarea-dropdown', 'value'), Input('interval_coiler', 'n_intervals')])
+def display_value(selected_value, _):
+    dataset = get_dataframe()
     data = json.loads(dataset)
     df_bigdata = pd.read_json(data['df_01'], orient='split')
     # df_bigdata = df_bigdata.reset_index()
@@ -85,8 +109,9 @@ def display_value(selected_value, dataset):
 
 @app.callback(
     Output('coilid_plot', 'figure'),
-    [Input('exitarea-dropdown', 'value'), Input('coiler_dataset_df', 'children')])
-def display_coil_value(selected_value, dataset):
+    [Input('exitarea-dropdown', 'value'),  Input('interval_coiler', 'n_intervals')])
+def display_coil_value(selected_value, _):
+    dataset = get_dataframe()
     data = json.loads(dataset)
     df_bigdata = pd.read_json(data['df_01'], orient='split')
     # df_bigdata = df_bigdata.reset_index()
@@ -137,3 +162,15 @@ def display_coil_value(selected_value, dataset):
     # Plot and embed
     fig = dict(data=data, layout=Layout)
     return fig
+
+
+@app.callback(
+    Output("status_coiler", "children"),
+    [Input('interval_coiler', 'n_intervals')],
+)
+def update_status(_):
+    data_last_updated = redis_instance.hget(
+        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["COILERDATA_DATE_UPDATED"]
+    ).decode("utf-8")
+
+    return "Data last updated at {}".format(data_last_updated)

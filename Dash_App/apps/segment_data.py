@@ -12,7 +12,7 @@ import tasks
 
 redis_instance = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
 
-tasks.update_segment_data()
+#tasks.update_segment_data()
 
 
 def get_dataframe():

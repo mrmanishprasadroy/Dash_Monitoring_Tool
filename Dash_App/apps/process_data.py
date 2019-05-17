@@ -1,5 +1,5 @@
 import json
-
+import redis
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
@@ -7,38 +7,61 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from telegram_definition_L1 import *
 from app import app
+import os
+import tasks
 
-layout = [
-    # third Controls
-    html.Div(
-        [
-            dcc.Dropdown(
-                id='pitem-list',
-                options=[
-                    {'label': '{}'.format(teltype_M21[i][0]), 'value': teltype_M21[i][0]} for i in range(0, 13)
-                ],
-                multi=True,
-                value=[teltype_M21[0][0]]
-            ),
-        ], className="row", style={"marginBottom": "10"}
-    ),
+redis_instance = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
 
-    # Chart Container
-    html.Div(
-        [
-            dcc.Graph(
-                id="psegment_plot",
-                config=dict(displayModeBar=False),
-            ),
-        ], className="sms_chart_div", style={"marginBottom": "10"}
-    )
-]
+tasks.update_segment_data()
+
+
+def get_dataframe():
+    """Retrieve the dataframe from Redis
+    This dataframe is periodically updated through the redis task
+    """
+    jsonified_df = redis_instance.hget(
+        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["DATASEGMENT"]
+    ).decode("utf-8")
+    # df = pd.DataFrame(json.loads(jsonified_df))
+    return json.loads(jsonified_df)
+
+
+def serve_layout():
+    return html.Div([
+        # third Controls
+        html.Div(
+            [
+                dcc.Dropdown(
+                    id='itemp-list',
+                    options=[
+                        {'label': '{}'.format(teltype_M21[i][0]), 'value': teltype_M21[i][0]} for i in range(0, 13)
+                    ],
+                    multi=True,
+                    value=[teltype_M21[0][0]]
+                ),
+                html.Div(id="status_pseg"),
+            ], className="row", style={"marginBottom": "10"}
+        ),
+        # Interval
+        dcc.Interval(interval=30 * 1000, id="interval_pseg"),
+        # Chart Container
+        html.Div(
+            [
+                dcc.Graph(
+                    id="psegment_plot",
+                    config=dict(displayModeBar=False),
+                ),
+            ], className="sms_chart_div", style={"marginBottom": "10"}
+        )
+    ])
+
 
 
 @app.callback(
     Output('psegment_plot', 'figure'),
-    [Input('pitem-list', 'value'), Input('process_dataset_df', 'children')])
-def display_value(selected_dropdown_value, dataset):
+    [Input('itemp-list', 'value'), Input("interval_pseg", "n_intervals")])
+def display_value(selected_dropdown_value, _):
+    dataset = get_dataframe()
     data = json.loads(dataset)
     MP_01 = pd.read_json(data['df_01'], orient='split')
     MP_02 = pd.read_json(data['df_02'], orient='split')
@@ -185,3 +208,15 @@ def display_value(selected_dropdown_value, dataset):
     # Plot and embed
     fig = dict(data=data, layout=layout)
     return fig
+
+
+@app.callback(
+    Output("status_pseg", "children"),
+    [Input('itemp-list', 'value'), Input("interval_pseg", "n_intervals")],
+)
+def update_status(value, _):
+    data_last_updated = redis_instance.hget(
+        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["SEGMENT_DATE_UPDATED"]
+    ).decode("utf-8")
+
+    return "Data last updated at {}".format(data_last_updated)

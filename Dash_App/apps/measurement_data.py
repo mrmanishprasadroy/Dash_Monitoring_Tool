@@ -5,36 +5,60 @@ import plotly.graph_objs as go
 import json
 from app import app
 import pandas as pd
+import os
+import tasks
+import redis
 
-layout = html.Div([
-    dcc.Dropdown(
-        id='measurment-dropdown',
-        options=[
-            {'label': '{}'.format(i), 'value': i} for i in [
-                'Thickness 1', 'Length 1', 'StripSpeed 1', 'GcsActive G1', 'GcsActive G2', 'GcsActive G3',
-                'GcsActive G4', 'GcsActive G5', 'FcsActive G1', 'FcsActive G2', 'FcsActive G3', 'FcsActive G4',
-                'FcsActive G5'
-            ]
-        ],
-        multi=True,
-        value=['GcsActive G1', 'GcsActive G2', 'GcsActive G3', 'GcsActive G4', 'GcsActive G5']
-    ),
-    # Chart Container
-    html.Div(
-        [
-            dcc.Graph(
-                id="meas_plot",
-                config=dict(displayModeBar=False),
-            ),
-        ], className="sms_chart_div", style={"marginBottom": "10"}
-    )
-])
+redis_instance = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
+
+tasks.update_measurment_data()
+
+
+def get_dataframe():
+    """Retrieve the dataframe from Redis
+    This dataframe is periodically updated through the redis task
+    """
+    jsonified_df = redis_instance.hget(
+        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["MESDATA"]
+    ).decode("utf-8")
+    # df = pd.DataFrame(json.loads(jsonified_df))
+    return json.loads(jsonified_df)
+
+
+def serve_layout():
+    return html.Div([
+        dcc.Dropdown(
+            id='measurment-dropdown',
+            options=[
+                {'label': '{}'.format(i), 'value': i} for i in [
+                    'Thickness 1', 'Length 1', 'StripSpeed 1', 'GcsActive G1', 'GcsActive G2', 'GcsActive G3',
+                    'GcsActive G4', 'GcsActive G5', 'FcsActive G1', 'FcsActive G2', 'FcsActive G3', 'FcsActive G4',
+                    'FcsActive G5'
+                ]
+            ],
+            multi=True,
+            value=['GcsActive G1', 'GcsActive G2', 'GcsActive G3', 'GcsActive G4', 'GcsActive G5']
+        ),
+        html.Div(id="status_meas"),
+        # Interval
+        dcc.Interval(interval=30 * 1000, id="interval_meas"),
+        # Chart Container
+        html.Div(
+            [
+                dcc.Graph(
+                    id="meas_plot",
+                    config=dict(displayModeBar=False),
+                ),
+            ], className="sms_chart_div", style={"marginBottom": "10"}
+        )
+    ])
 
 
 @app.callback(
     Output('meas_plot', 'figure'),
-    [Input('measurment-dropdown', 'value'), Input('meas_dataset_df', 'children')])
-def display_value(selected_value, dataset):
+    [Input('measurment-dropdown', 'value'), Input("interval_meas", "n_intervals")])
+def display_value(selected_value, _):
+    dataset = get_dataframe()
     data = json.loads(dataset)
     df_bigdata = pd.read_json(data['df_01'], orient='split')
     df_bigdata = df_bigdata.reset_index()
@@ -72,3 +96,15 @@ def display_value(selected_value, dataset):
     # Plot and embed
     fig = dict(data=data, layout=layout)
     return fig
+
+
+@app.callback(
+    Output("status_meas", "children"),
+    [Input("interval_meas", "n_intervals")],
+)
+def update_status(_):
+    data_last_updated = redis_instance.hget(
+        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["MESDATA_DATE_UPDATED"]
+    ).decode("utf-8")
+
+    return "Data last updated at {}".format(data_last_updated)

@@ -1,7 +1,7 @@
 from telegram_definition_L1 import *
 import json
 import glob
-from datetime import datetime
+import datetime
 import numpy as np
 import pandas as pd
 import os
@@ -32,7 +32,7 @@ def read_strip_tracking_data():
             f = open(file, 'rb')
             oneTelegram = np.fromfile(f, dtype=teltype_M10)
             allTelegram_M10 = np.concatenate((allTelegram_M10, oneTelegram))
-            timeIndex.append(datetime.fromtimestamp(os.path.getmtime(file)))
+            timeIndex.append(datetime.datetime.fromtimestamp(os.path.getmtime(file)))
             f.close()
         print("M10: reading of data done")
     else:

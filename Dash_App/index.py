@@ -5,17 +5,7 @@ from dash.dependencies import Input, Output
 from app import app
 from apps import segment_data, measurement_data, strip_tracking, process_data, setup_table, coiler_tracking, \
     coilid_tracking
-from coil_id_tracking_data import *
-from coiler_exit_data import *
-from measurment_data import *
-from segmentdata import *
-from srtip_tracking_data import *
 
-process_dateset = read_segment_data_monitor()
-meas_data = read_measurment_data()
-strip_dataset = read_strip_tracking_data()
-coiler_dataset = read_data()
-# setup_dataset = setup_data()
 
 app.layout = html.Div([
     # header
@@ -43,12 +33,7 @@ app.layout = html.Div([
             dcc.Link('Coil Id Tracking', href='/apps/coilid_tracking', className='button button-primary'),
         ], className="row", ),
     # Hidden divs to contain data
-    # html.Div(process_dateset, id="segment_dataset_df", style={'display': "none"}),
-    html.Div(meas_data, id="meas_dataset_df", style={'display': "none"}),
-    html.Div(strip_dataset, id="strip_dataset_df", style={'display': "none"}),
-    html.Div(process_dateset, id="process_dataset_df", style={'display': "none"}),
-    html.Div(coiler_dataset, id="coiler_dataset_df", style={'display': "none"}),
-    html.Div(read_coilid_data(), id="coilTrack_dataset_df", style={'display': "none"}),
+    # html.Div(process_dateset, id="process_dataset_df", style={'display': "none"}),
     html.Div(id='page-content')
 ])
 
@@ -59,17 +44,17 @@ def display_page(pathname):
     if pathname == '/apps/segment_data':
         return segment_data.serve_layout()
     elif pathname == '/apps/measurement_data':
-        return measurement_data.layout
+        return measurement_data.serve_layout()
     elif pathname == '/apps/strip_tracking':
-        return strip_tracking.layout
+        return strip_tracking.serve_layout()
     elif pathname == '/apps/process_data':
-        return process_data.layout
+        return process_data.serve_layout()
     elif pathname == '/apps/setup_data':
         return setup_table.serve_layout()
     elif pathname == '/apps/exit_area':
-        return coiler_tracking.layout
+        return coiler_tracking.serve_layout()
     elif pathname == '/apps/coilid_tracking':
-        return coilid_tracking.layout
+        return coilid_tracking.serve_layout()
     else:
         return segment_data.serve_layout()
 

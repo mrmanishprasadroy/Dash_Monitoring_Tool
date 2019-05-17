@@ -1,6 +1,6 @@
 import glob
 import os
-from datetime import datetime
+import datetime
 import json
 import numpy as np
 import pandas as pd
@@ -44,7 +44,7 @@ def read_coilid_data():
             f = open(file, 'rb')
             oneTelegram = np.fromfile(f, dtype=teltype_M06)
             allTelegram_M06 = np.concatenate((allTelegram_M06, oneTelegram))
-            timeIndex.append(datetime.fromtimestamp(os.path.getmtime(file)))
+            timeIndex.append(datetime.datetime.fromtimestamp(os.path.getmtime(file)))
             f.close()
         print("M06: reading of data done")
     else:

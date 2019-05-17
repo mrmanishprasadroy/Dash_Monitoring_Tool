@@ -4,7 +4,7 @@ import glob
 import numpy as np
 import pandas as pd
 
-from datetime import datetime
+import datetime
 from telegram_definition_L1 import *
 from golabal_def import Dir_Path
 import json
@@ -69,7 +69,7 @@ def determine_display_color(name):
         display_color[name] = next_display_color()
 
 
-def read_data():
+def read_coiler_data():
     global allTelegram_MP10
     timeIndex = []
 
@@ -87,7 +87,7 @@ def read_data():
             f = open(file, 'rb')
             oneTelegram = np.fromfile(f, dtype=teltype_M24)
             allTelegram_MP10 = np.concatenate((allTelegram_MP10, oneTelegram))
-            timeIndex.append(datetime.fromtimestamp(os.path.getmtime(file)))
+            timeIndex.append(datetime.datetime.fromtimestamp(os.path.getmtime(file)))
             f.close()
         print("MP 10: reading of data done")
     else:
@@ -103,7 +103,7 @@ def read_data():
 
     # create DataFrame for MP10 ----------------------------------------------
 
-    ti_MP10 = [datetime(x['TmSegStart'][0], x['TmSegStart'][1], x['TmSegStart'][2],
+    ti_MP10 = [datetime.datetime(x['TmSegStart'][0], x['TmSegStart'][1], x['TmSegStart'][2],
                         x['TmSegStart'][3], x['TmSegStart'][4], x['TmSegStart'][5], x['TmSegStart'][6] * 1000) for x in
                allTelegram_MP10]
 
