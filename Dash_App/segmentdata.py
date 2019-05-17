@@ -1,7 +1,7 @@
 from telegram_definition_L1 import *
 import json
 import glob
-from datetime import datetime
+import datetime
 import numpy as np
 import pandas as pd
 from golabal_def import Dir_Path
@@ -248,7 +248,7 @@ def read_segment_data_monitor():
 
 
 def create_dataset(allTelegram):
-    ti = [datetime(x['TmSegStart'][0], x['TmSegStart'][1], x['TmSegStart'][2],
+    ti = [datetime.datetime(x['TmSegStart'][0], x['TmSegStart'][1], x['TmSegStart'][2],
                    x['TmSegStart'][3], x['TmSegStart'][4], x['TmSegStart'][5], x['TmSegStart'][6] * 1000)
           for x in allTelegram]
 

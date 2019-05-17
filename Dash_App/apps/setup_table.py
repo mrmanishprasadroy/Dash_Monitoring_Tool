@@ -143,7 +143,7 @@ def update_status(value, _):
     coils = pd.read_json(data['df_00'], orient='split')
     coil_arr = coils.CoilIdOut.unique()
     data_last_updated = redis_instance.hget(
-        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["DATE_UPDATED"]
+        tasks.REDIS_HASH_NAME, tasks.REDIS_KEYS["SETUP_DATE_UPDATED"]
     ).decode("utf-8")
 
     return "Data last updated at {}".format(data_last_updated)

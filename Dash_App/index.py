@@ -43,7 +43,7 @@ app.layout = html.Div([
             dcc.Link('Coil Id Tracking', href='/apps/coilid_tracking', className='button button-primary'),
         ], className="row", ),
     # Hidden divs to contain data
-    html.Div(process_dateset, id="segment_dataset_df", style={'display': "none"}),
+    # html.Div(process_dateset, id="segment_dataset_df", style={'display': "none"}),
     html.Div(meas_data, id="meas_dataset_df", style={'display': "none"}),
     html.Div(strip_dataset, id="strip_dataset_df", style={'display': "none"}),
     html.Div(process_dateset, id="process_dataset_df", style={'display': "none"}),
@@ -57,7 +57,7 @@ app.layout = html.Div([
               [Input('url', 'pathname')])
 def display_page(pathname):
     if pathname == '/apps/segment_data':
-        return segment_data.layout
+        return segment_data.serve_layout()
     elif pathname == '/apps/measurement_data':
         return measurement_data.layout
     elif pathname == '/apps/strip_tracking':
@@ -71,7 +71,7 @@ def display_page(pathname):
     elif pathname == '/apps/coilid_tracking':
         return coilid_tracking.layout
     else:
-        return segment_data.layout
+        return segment_data.serve_layout()
 
 
 if __name__ == '__main__':
