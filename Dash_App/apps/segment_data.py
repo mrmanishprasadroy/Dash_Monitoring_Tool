@@ -97,8 +97,8 @@ def display_value(selected_dropdown_value, _):
             text=MP_00[item],
             line=dict(
                 # color=('rgb(205, 12, 24)'),
-                dash='dash',
-                width=4)
+                dash='solid',
+                width=2)
         ))
         trace1.append(go.Scatter(
             x=MP_01['time'],
@@ -108,7 +108,7 @@ def display_value(selected_dropdown_value, _):
             line=dict(
                 # color=('rgb(22, 96, 167)'),
                 dash='dash',
-                width=4, )
+                width=2, )
         ))
         trace2.append(go.Scatter(
             x=MP_02['time'],
@@ -117,8 +117,8 @@ def display_value(selected_dropdown_value, _):
             text=MP_02[item],
             line=dict(
                 # color=('rgb(205, 12, 24)'),
-                width=4,
-                dash='dash')  # dash options include 'dash', 'dot', and 'dashdot'
+                width=2,
+                dash='solid')  # dash options include 'dash', 'dot', and 'dashdot'
         ))
         trace3.append(go.Scatter(
             x=MP_03['time'],
@@ -127,7 +127,7 @@ def display_value(selected_dropdown_value, _):
             text=MP_03[item],
             line=dict(
                 # color=('rgb(22, 96, 167)'),
-                width=4,
+                width=2,
                 dash='dash')
         ))
         trace4.append(go.Scatter(
@@ -137,8 +137,8 @@ def display_value(selected_dropdown_value, _):
             text=MP_04[item],
             line=dict(
                 # color=('rgb(205, 12, 24)'),
-                width=4,
-                dash='dash')
+                width=2,
+                dash='solid')
         ))
         trace5.append(go.Scatter(
             x=MP_05['time'],
@@ -147,7 +147,7 @@ def display_value(selected_dropdown_value, _):
             text=MP_05[item],
             line=dict(
                 # color=('rgb(22, 96, 167)'),
-                width=4,
+                width=2,
                 dash='dash')
         ))
         trace6.append(go.Scatter(
@@ -157,8 +157,8 @@ def display_value(selected_dropdown_value, _):
             text=MP_06[item],
             line=dict(
                 #  color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dash')
+                width=2,
+                dash='solid')
         ))
         trace7.append(go.Scatter(
             x=MP_07['time'],
@@ -167,7 +167,7 @@ def display_value(selected_dropdown_value, _):
             text=MP_07[item],
             line=dict(
                 # color=('rgb(22, 96, 167)'),
-                width=4,
+                width=2,
                 dash='dash')
         ))
         trace8.append(go.Scatter(
@@ -177,8 +177,8 @@ def display_value(selected_dropdown_value, _):
             text=MP_08[item],
             line=dict(
                 # color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dash')
+                width=2,
+                dash='solid')
         ))
         trace9.append(go.Scatter(
             x=MP_09['time'],
@@ -187,7 +187,7 @@ def display_value(selected_dropdown_value, _):
             text=MP_09[item],
             line=dict(
                 #  color=('rgb(22, 96, 167)'),
-                width=4,
+                width=2,
                 dash='dot')
         ))
         trace10.append(go.Scatter(
@@ -197,10 +197,10 @@ def display_value(selected_dropdown_value, _):
             text=MP_10[item],
             line=dict(
                 #  color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dot')
+                width=2,
+                dash='solid')
         ))
-    traces = [trace0, trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9,trace10]
+    traces = [trace0, trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
     data = [val for sublist in traces for val in sublist]
 
     # Edit the layout

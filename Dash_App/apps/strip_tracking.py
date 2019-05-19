@@ -82,7 +82,7 @@ def display_value(selected_value, _):
             line=dict(
                 # color=('rgb(205, 12, 24)'),
                 # dash='dash',
-                width=4)
+                width=2)
         ))
 
     traces = [trace0]
@@ -127,7 +127,7 @@ def display_coil_value(selected_value, _):
         line=dict(
             # color=('rgb(205, 12, 24)'),
             # dash='dash',
-            width=4)
+            width=2)
     )
 
     # Create and style traces
@@ -139,7 +139,7 @@ def display_coil_value(selected_value, _):
         line=dict(
             # color=('rgb(205, 12, 24)'),
             # dash='dash',
-            width=4)
+            width=2)
     )
 
     data = [trace0, trace1]
