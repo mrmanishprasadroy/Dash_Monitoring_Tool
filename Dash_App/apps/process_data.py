@@ -28,183 +28,196 @@ def get_dataframe():
 
 def serve_layout():
     return html.Div([
-        # third Controls
-        html.Div(
-            [
-                dcc.Dropdown(
-                    id='itemp-list',
-                    options=[
-                        {'label': '{}'.format(teltype_M21[i][0]), 'value': teltype_M21[i][0]} for i in range(0, 13)
-                    ],
-                    multi=True,
-                    value=[teltype_M21[0][0]]
-                ),
-                html.Div(id="status_pseg"),
-            ], className="row", style={"marginBottom": "10"}
-        ),
+        html.Div(id="status_pseg"),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_pseg"),
-        # Chart Container
+        # First Controls
         html.Div(
             [
-                dcc.Graph(
-                    id="psegment_plot",
-                    config=dict(displayModeBar=False),
+                html.Div(
+                    dcc.Dropdown(
+                        id='atstand-list',
+                        options=[
+                            {'label': '{}'.format(teltype_M21[i][0]), 'value': teltype_M21[i][0]} for i in range(0, 125)
+                        ],
+                        multi=True,
+                        value=[teltype_M21[0][0]]
+                    ), className="six columns",
+
                 ),
-            ], className="sms_chart_div", style={"marginBottom": "10"}
-        )
+
+                html.Div(
+                    dcc.Dropdown(
+                        id='betweenstand-list',
+                        options=[
+                            {'label': '{}'.format(teltype_M22[i][0]), 'value': teltype_M22[i][0]} for i in range(0, 47)
+                        ],
+                        multi=True,
+                        value=[teltype_M22[0][0]]
+                    ), className="six columns",
+
+                ),
+
+            ], className="row", style={"marginBottom": "10"}
+        ),
+
+        # First Chart Container
+        html.Div(
+            [
+                html.Div(
+                    dcc.Graph(
+                        id="atstand_plot",
+                        config=dict(displayModeBar=False),
+                    ), className="six columns",
+
+                ),
+
+                html.Div(
+                    dcc.Graph(
+                        id="betweenstand_plot",
+                        config=dict(displayModeBar=False),
+                    ), className="six columns",
+
+                ),
+            ], className="row", style={"marginBottom": "10"}
+        ),
+
+        # Second Controls
+        html.Div(
+            [
+                html.Div(
+                    dcc.Dropdown(
+                        id='beforfirststand-list',
+                        options=[
+                            {'label': '{}'.format(teltype_M23[i][0]), 'value': teltype_M23[i][0]} for i in range(0, 47)
+                        ],
+                        multi=True,
+                        value=[teltype_M23[0][0]]
+                    ), className="six columns",
+
+                ),
+
+                html.Div(
+                    dcc.Dropdown(
+                        id='afterlaststand-list',
+                        options=[
+                            {'label': '{}'.format(teltype_M24[i][0]), 'value': teltype_M24[i][0]} for i in range(0, 67)
+                        ],
+                        multi=True,
+                        value=[teltype_M24[0][0]]
+                    ), className="six columns",
+
+                ),
+
+            ], className="row", style={"marginBottom": "10"}
+        ),
+
+        # Second Chart Container
+        html.Div(
+            [
+                html.Div(
+                    dcc.Graph(
+                        id="beforfirststand_plot",
+                        config=dict(displayModeBar=False),
+                    ), className="six columns",
+
+                ),
+
+                html.Div(
+                    dcc.Graph(
+                        id="afterlaststand_plot",
+                        config=dict(displayModeBar=False),
+                    ), className="six columns",
+
+                ),
+            ], className="row", style={"marginBottom": "10"}
+        ),
+
     ])
 
 
+'''
+    At stand Plotting
+'''
+
 
 @app.callback(
-    Output('psegment_plot', 'figure'),
-    [Input('itemp-list', 'value'), Input("interval_pseg", "n_intervals")])
+    Output('atstand_plot', 'figure'),
+    [Input('atstand-list', 'value'), Input("interval_pseg", "n_intervals")])
 def display_value(selected_dropdown_value, _):
     dataset = get_dataframe()
     data = json.loads(dataset)
-    MP_00 = pd.read_json(data['df_00'], orient='split')
     MP_01 = pd.read_json(data['df_01'], orient='split')
-    MP_02 = pd.read_json(data['df_02'], orient='split')
     MP_03 = pd.read_json(data['df_03'], orient='split')
-    MP_04 = pd.read_json(data['df_04'], orient='split')
     MP_05 = pd.read_json(data['df_05'], orient='split')
-    MP_06 = pd.read_json(data['df_06'], orient='split')
     MP_07 = pd.read_json(data['df_07'], orient='split')
-    MP_08 = pd.read_json(data['df_08'], orient='split')
     MP_09 = pd.read_json(data['df_09'], orient='split')
-    MP_10 = pd.read_json(data['df_10'], orient='split')
     # MP_01.to_csv('data', sep='\t', encoding='utf-8')
     # index = pd.to_datetime(MP_02['time'], format="%Y-%m-%d %H:%M:%S.%f")
-    trace0 = []
+
     trace1 = []
-    trace2 = []
     trace3 = []
-    trace4 = []
     trace5 = []
-    trace6 = []
     trace7 = []
-    trace8 = []
     trace9 = []
-    trace10 = []
 
     for item in selected_dropdown_value:
         # Create and style traces
-        trace0.append(go.Scatter(
-            x=MP_00['time'],
-            y=MP_00[item],
-            name=item + ' at MP 00',
-            text=MP_00[item],
-            line=dict(
-                # color=('rgb(205, 12, 24)'),
-                dash='dash',
-                width=4)
-        ))
         trace1.append(go.Scatter(
             x=MP_01['time'],
-            y=MP_02[item],
-            name=item + ' at MP 01',
+            y=MP_01[item],
+            name=item + 'G1',
             text=MP_01[item],
             line=dict(
                 # color=('rgb(22, 96, 167)'),
-                dash='dash',
-                width=4, )
-        ))
-        trace2.append(go.Scatter(
-            x=MP_02['time'],
-            y=MP_02[item],
-            name=item + 'at MP 02',
-            text=MP_02[item],
-            line=dict(
-                # color=('rgb(205, 12, 24)'),
-                width=4,
-                dash='dash')  # dash options include 'dash', 'dot', and 'dashdot'
+                dash='solid',
+                width=2, )
         ))
         trace3.append(go.Scatter(
             x=MP_03['time'],
             y=MP_03[item],
-            name=item + ' at MP 03',
+            name=item + 'G2',
             text=MP_03[item],
             line=dict(
                 # color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dash')
-        ))
-        trace4.append(go.Scatter(
-            x=MP_04['time'],
-            y=MP_04[item],
-            name=item + ' at MP 04',
-            text=MP_04[item],
-            line=dict(
-                # color=('rgb(205, 12, 24)'),
-                width=4,
-                dash='dash')
+                width=2,
+                dash='solid')
         ))
         trace5.append(go.Scatter(
             x=MP_05['time'],
-            y=MP_06[item],
-            name=item + ' at MP 05',
+            y=MP_05[item],
+            name=item + 'G3',
             text=MP_05[item],
             line=dict(
                 # color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dash')
-        ))
-        trace6.append(go.Scatter(
-            x=MP_06['time'],
-            y=MP_06[item],
-            name=item + ' at MP 06',
-            text=MP_06[item],
-            line=dict(
-                #  color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dash')
+                width=2,
+                dash='solid')
         ))
         trace7.append(go.Scatter(
             x=MP_07['time'],
-            y=MP_08[item],
-            name=item + ' at MP 07',
+            y=MP_07[item],
+            name=item + 'G4',
             text=MP_07[item],
             line=dict(
                 # color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dash')
-        ))
-        trace8.append(go.Scatter(
-            x=MP_08['time'],
-            y=MP_08[item],
-            name=item + ' at MP 08',
-            text=MP_08[item],
-            line=dict(
-                # color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dash')
+                width=2,
+                dash='solid')
         ))
         trace9.append(go.Scatter(
             x=MP_09['time'],
             y=MP_09[item],
-            name=item + ' at MP 09',
+            name=item + 'G5',
             text=MP_09[item],
             line=dict(
                 #  color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dot')
+                width=2,
+                dash='solid')
         ))
-        trace10.append(go.Scatter(
-            x=MP_10['time'],
-            y=MP_10[item],
-            name=item + ' at MP 10',
-            text=MP_10[item],
-            line=dict(
-                #  color=('rgb(22, 96, 167)'),
-                width=4,
-                dash='dot')
-        ))
-    traces = [trace0, trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
+    traces = [trace1, trace3, trace5, trace7, trace9]
     data = [val for sublist in traces for val in sublist]
 
     # Edit the layout
-    layout = dict(title='Segment data at measurement points "{}"'.format(selected_dropdown_value),
+    layout = dict(title='Process Data at stands "{}"'.format(selected_dropdown_value),
                   xaxis={"title": "Date Time",
                          'rangeselector': {'buttons': list([
                              {'count': 1, 'label': '1M', 'step': 'minute', 'stepmode': 'backward'},
@@ -222,9 +235,96 @@ def display_value(selected_dropdown_value, _):
     return fig
 
 
+'''
+    Between stand Plotting
+'''
+
+
+@app.callback(
+    Output('betweenstand_plot', 'figure'),
+    [Input('betweenstand-list', 'value'), Input("interval_pseg", "n_intervals")])
+def display_value(selected_dropdown_value, _):
+    dataset = get_dataframe()
+    data = json.loads(dataset)
+
+    MP_02 = pd.read_json(data['df_02'], orient='split')
+    MP_04 = pd.read_json(data['df_04'], orient='split')
+    MP_06 = pd.read_json(data['df_06'], orient='split')
+    MP_08 = pd.read_json(data['df_08'], orient='split')
+    # MP_01.to_csv('data', sep='\t', encoding='utf-8')
+    # index = pd.to_datetime(MP_02['time'], format="%Y-%m-%d %H:%M:%S.%f")
+    trace2 = []
+    trace4 = []
+    trace6 = []
+    trace8 = []
+
+    for item in selected_dropdown_value:
+        trace2.append(go.Scatter(
+            x=MP_02['time'],
+            y=MP_02[item],
+            name=item + ' G1-G2',
+            text=MP_02[item],
+            line=dict(
+                # color=('rgb(205, 12, 24)'),
+                width=2,
+                dash='solid')  # dash options include 'dash', 'dot', and 'dashdot'
+        ))
+        trace4.append(go.Scatter(
+            x=MP_04['time'],
+            y=MP_04[item],
+            name=item + ' G2-G3',
+            text=MP_04[item],
+            line=dict(
+                # color=('rgb(205, 12, 24)'),
+                width=2,
+                dash='solid')
+        ))
+        trace6.append(go.Scatter(
+            x=MP_06['time'],
+            y=MP_06[item],
+            name=item + ' G3-G4',
+            text=MP_06[item],
+            line=dict(
+                #  color=('rgb(22, 96, 167)'),
+                width=2,
+                dash='solid')
+        ))
+        trace8.append(go.Scatter(
+            x=MP_08['time'],
+            y=MP_08[item],
+            name=item + ' G4-G5',
+            text=MP_08[item],
+            line=dict(
+                # color=('rgb(22, 96, 167)'),
+                width=2,
+                dash='solid')
+        ))
+    traces = [trace2, trace4, trace6,  trace8]
+    data = [val for sublist in traces for val in sublist]
+
+    # Edit the layout
+    layout = dict(title='Process Data Between stands "{}"'.format(selected_dropdown_value),
+                  xaxis={"title": "Date Time",
+                         'rangeselector': {'buttons': list([
+                             {'count': 1, 'label': '1M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'count': 10, 'label': '6M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'step': 'all'}
+                         ])}, 'rangeslider': {'visible': True}, 'type': 'date'},
+                  # yaxis=dict(title='Values'),
+                  margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
+                  legend={'x': 0, 'y': 1},
+                  hovermode='closest'
+                  )
+
+    # Plot and embed
+    fig = dict(data=data, layout=layout)
+    return fig
+
+
+
 @app.callback(
     Output("status_pseg", "children"),
-    [Input('itemp-list', 'value'), Input("interval_pseg", "n_intervals")],
+    [Input('atstand-list', 'value'), Input("interval_pseg", "n_intervals")],
 )
 def update_status(value, _):
     data_last_updated = redis_instance.hget(
@@ -232,3 +332,101 @@ def update_status(value, _):
     ).decode("utf-8")
 
     return "Data last updated at {}".format(data_last_updated)
+
+
+'''
+    Befor First stand Plotting
+'''
+
+
+@app.callback(
+    Output('beforfirststand_plot', 'figure'),
+    [Input('beforfirststand-list', 'value'), Input("interval_pseg", "n_intervals")])
+def display_value(selected_dropdown_value, _):
+    dataset = get_dataframe()
+    data = json.loads(dataset)
+    MP_00 = pd.read_json(data['df_00'], orient='split')
+    trace0 = []
+
+    for item in selected_dropdown_value:
+        # Create and style traces
+        trace0.append(go.Scatter(
+            x=MP_00['time'],
+            y=MP_00[item],
+            name=item + ' Before First Stand',
+            text=MP_00[item],
+            line=dict(
+                # color=('rgb(205, 12, 24)'),
+                dash='solid',
+                width=2)
+        ))
+
+    traces = [trace0]
+    data = [val for sublist in traces for val in sublist]
+
+    # Edit the layout
+    layout = dict(title='Process Data Before First stands "{}"'.format(selected_dropdown_value),
+                  xaxis={"title": "Date Time",
+                         'rangeselector': {'buttons': list([
+                             {'count': 1, 'label': '1M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'count': 10, 'label': '6M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'step': 'all'}
+                         ])}, 'rangeslider': {'visible': True}, 'type': 'date'},
+                  # yaxis=dict(title='Values'),
+                  margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
+                  legend={'x': 0, 'y': 1},
+                  hovermode='closest'
+                  )
+
+    # Plot and embed
+    fig = dict(data=data, layout=layout)
+    return fig
+
+
+'''
+    Last stand Plotting
+'''
+
+
+@app.callback(
+    Output('afterlaststand_plot', 'figure'),
+    [Input('afterlaststand-list', 'value'), Input("interval_pseg", "n_intervals")])
+def display_value(selected_dropdown_value, _):
+    dataset = get_dataframe()
+    data = json.loads(dataset)
+    MP_10 = pd.read_json(data['df_10'], orient='split')
+    # MP_01.to_csv('data', sep='\t', encoding='utf-8')
+    # index = pd.to_datetime(MP_02['time'], format="%Y-%m-%d %H:%M:%S.%f")
+    trace10 = []
+
+    for item in selected_dropdown_value:
+        trace10.append(go.Scatter(
+            x=MP_10['time'],
+            y=MP_10[item],
+            name=item + ' After Last Stand',
+            text=MP_10[item],
+            line=dict(
+                #  color=('rgb(22, 96, 167)'),
+                width=2,
+                dash='solid')
+        ))
+    traces = [trace10]
+    data = [val for sublist in traces for val in sublist]
+
+    # Edit the layout
+    layout = dict(title='Process Data After Last stands "{}"'.format(selected_dropdown_value),
+                  xaxis={"title": "Date Time",
+                         'rangeselector': {'buttons': list([
+                             {'count': 1, 'label': '1M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'count': 10, 'label': '6M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'step': 'all'}
+                         ])}, 'rangeslider': {'visible': True}, 'type': 'date'},
+                  # yaxis=dict(title='Values'),
+                  margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
+                  legend={'x': 0, 'y': 1},
+                  hovermode='closest'
+                  )
+
+    # Plot and embed
+    fig = dict(data=data, layout=layout)
+    return fig

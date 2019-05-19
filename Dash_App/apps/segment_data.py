@@ -102,7 +102,7 @@ def display_value(selected_dropdown_value, _):
         ))
         trace1.append(go.Scatter(
             x=MP_01['time'],
-            y=MP_02[item],
+            y=MP_01[item],
             name=item + ' at MP 01',
             text=MP_01[item],
             line=dict(
@@ -142,7 +142,7 @@ def display_value(selected_dropdown_value, _):
         ))
         trace5.append(go.Scatter(
             x=MP_05['time'],
-            y=MP_06[item],
+            y=MP_05[item],
             name=item + ' at MP 05',
             text=MP_05[item],
             line=dict(
@@ -162,7 +162,7 @@ def display_value(selected_dropdown_value, _):
         ))
         trace7.append(go.Scatter(
             x=MP_07['time'],
-            y=MP_08[item],
+            y=MP_07[item],
             name=item + ' at MP 07',
             text=MP_07[item],
             line=dict(
