@@ -7,6 +7,7 @@ from app import app
 import redis
 import tasks
 from setup_data import *
+import plotly.graph_objs as go
 import flask
 import io
 from flask import send_file
@@ -30,6 +31,8 @@ def get_dataframe():
 df_setup = get_dataframe()
 data = json.loads(df_setup)
 coils = pd.read_json(data['df_00'], orient='split')
+col = pd.read_json(data['df_01'], orient='split')
+columns = list(col.columns.values)
 coil_arr = coils.CoilIdOut.unique()
 
 
@@ -43,33 +46,60 @@ def serve_layout():
                         {'label': '{}'.format(i), 'value': i} for i in coil_arr
                     ],
                     value=coil_arr[0]
-                ), className="four columns",
+                ), className="two columns",
             ),
             html.Div(
                 html.A('Download Whole Dataset', id='my-link', className='button button-primary'),
-                className="four columns"
+                className="two columns"
+            ),
+            html.Div(children='''
+                                SetUp Varaibal For Plotting
+                    ''' , className="two columns"),
+             html.Div(
+                dcc.Dropdown(
+                    id='Setup_graph',
+                    options=[
+                         {'label': '{}'.format(i), 'value': i} for i in columns
+                    ],
+                    multi=True,
+                    value=[columns[4]]
+                ), className="three columns",
             ),
             html.Div(id="status"),
         ], className="row"),
 
-        # Interval
-        dcc.Interval(interval=30 * 1000, id="interval"),
-        # table div
-        dcc.Loading(id='table-view', children=html.Div(
-            id="setup_table",
-            className="row",
-            style={
-                "maxHeight": "650px",
-                "overflowY": "scroll",
-                "padding": "8",
-                "marginTop": "15",
-                "backgroundColor": "white",
-                "border": "1px solid #C8D4E3",
-                "borderRadius": "3px"
+        html.Div([
+              # Interval
+              dcc.Interval(interval=30 * 1000, id="interval"),
+              # table div
+            dcc.Loading(id='table-view', children=html.Div(
+                id="setup_table",
+                #className="row",
+                style={
+                    "maxHeight": "650px",
+                    "overflowY": "scroll",
+                    "padding": "8",
+                    "marginTop": "15",
+                    "backgroundColor": "white",
+                    "border": "1px solid #C8D4E3",
+                    "borderRadius": "3px"},
+                                            ),
+                      )
 
-            },
-        ),
-                    )
+        ],className="row"),
+        html.Div([
+            # Chart Container
+            html.Div(
+                [
+                    dcc.Graph(
+                        id="setup_plot",
+                        config=dict(displayModeBar=False),
+                    ),
+                ], className="sms_chart_div", style={"marginBottom": "10"}
+            )
+
+
+        ],className="row")      
     ])
 
 
@@ -147,3 +177,48 @@ def update_status(value, _):
     ).decode("utf-8")
 
     return "Data last updated at {}".format(data_last_updated)
+
+
+
+@app.callback(
+Output("setup_plot", "figure"),
+[Input("Setup_graph", "value"), Input("interval", "n_intervals")],)
+def update_graph_status(selected_dropdown_value, _):
+    df_setup = get_dataframe()
+    data = json.loads(df_setup)
+    df = pd.read_json(data['df_01'], orient='split')
+    trace0 = []
+
+    for item in selected_dropdown_value:
+        # Create and style traces
+        trace0.append(go.Scatter(
+            x=df['Time'],
+            y=df[item],
+            name=item,
+            text=df[item],
+            line=dict(
+                # color=('rgb(205, 12, 24)'),
+                dash='solid',
+                width=2)
+        ))
+
+    traces = [trace0]
+    data = [val for sublist in traces for val in sublist]
+
+    # Edit the layout
+    layout = dict(title='Setup Data "{}"'.format(selected_dropdown_value),
+                  xaxis={"title": "Date Time",
+                         'rangeselector': {'buttons': list([
+                             {'count': 1, 'label': '1M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'count': 10, 'label': '6M', 'step': 'minute', 'stepmode': 'backward'},
+                             {'step': 'all'}
+                         ])}, 'rangeslider': {'visible': False}, 'type': 'date'},
+                  # yaxis=dict(title='Values'),
+                  margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
+                  legend={'x': 0, 'y': 1},
+                  hovermode='closest'
+                  )
+
+    # Plot and embed
+    fig = dict(data=data, layout=layout)
+    return fig
