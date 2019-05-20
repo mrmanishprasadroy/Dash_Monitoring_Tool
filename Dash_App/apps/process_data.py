@@ -371,7 +371,7 @@ def display_value(selected_dropdown_value, _):
                              {'count': 1, 'label': '1M', 'step': 'minute', 'stepmode': 'backward'},
                              {'count': 10, 'label': '6M', 'step': 'minute', 'stepmode': 'backward'},
                              {'step': 'all'}
-                         ])}, 'rangeslider': {'visible': True}, 'type': 'date'},
+                         ])}, 'rangeslider': {'visible': False}, 'type': 'date'},
                   # yaxis=dict(title='Values'),
                   margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
                   legend={'x': 0, 'y': 1},
@@ -420,7 +420,7 @@ def display_value(selected_dropdown_value, _):
                              {'count': 1, 'label': '1M', 'step': 'minute', 'stepmode': 'backward'},
                              {'count': 10, 'label': '6M', 'step': 'minute', 'stepmode': 'backward'},
                              {'step': 'all'}
-                         ])}, 'rangeslider': {'visible': True}, 'type': 'date'},
+                         ])}, 'rangeslider': {'visible': False}, 'type': 'date'},
                   # yaxis=dict(title='Values'),
                   margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
                   legend={'x': 0, 'y': 1},
