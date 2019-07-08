@@ -54,12 +54,12 @@ def serve_layout():
             ),
             html.Div(children='''
                                 SetUp Varaibal For Plotting
-                    ''' , className="two columns"),
-             html.Div(
+                    ''', className="two columns"),
+            html.Div(
                 dcc.Dropdown(
                     id='Setup_graph',
                     options=[
-                         {'label': '{}'.format(i), 'value': i} for i in columns
+                        {'label': '{}'.format(i), 'value': i} for i in columns
                     ],
                     multi=True,
                     value=[columns[4]]
@@ -69,12 +69,12 @@ def serve_layout():
         ], className="row"),
 
         html.Div([
-              # Interval
-              dcc.Interval(interval=30 * 1000, id="interval"),
-              # table div
+            # Interval
+            dcc.Interval(interval=30 * 1000, id="interval"),
+            # table div
             dcc.Loading(id='table-view', children=html.Div(
                 id="setup_table",
-                #className="row",
+                # className="row",
                 style={
                     "maxHeight": "650px",
                     "overflowY": "scroll",
@@ -83,10 +83,10 @@ def serve_layout():
                     "backgroundColor": "white",
                     "border": "1px solid #C8D4E3",
                     "borderRadius": "3px"},
-                                            ),
-                      )
+            ),
+                        )
 
-        ],className="row"),
+        ], className="row"),
         html.Div([
             # Chart Container
             html.Div(
@@ -98,8 +98,7 @@ def serve_layout():
                 ], className="sms_chart_div", style={"marginBottom": "10"}
             )
 
-
-        ],className="row")      
+        ], className="row")
     ])
 
 
@@ -119,13 +118,13 @@ def leads_table_callback(value):
         data=df_bigdata.to_dict("rows"),
         # n_fixed_rows=1,
         # filtering=True,
-        sorting=True,
+        sort_action='native',
         style_cell={'width': '150px', 'padding': '5px', 'textAlign': 'center'},
         style_header={
             'backgroundColor': 'white',
             'fontWeight': 'bold'
         },
-        style_cell_conditional=[{
+        style_data_conditional=[{
             'if': {'row_index': 'odd'},
             'backgroundColor': '#3D9970',
         }],
@@ -179,10 +178,9 @@ def update_status(value, _):
     return "Data last updated at {}".format(data_last_updated)
 
 
-
 @app.callback(
-Output("setup_plot", "figure"),
-[Input("Setup_graph", "value"), Input("interval", "n_intervals")],)
+    Output("setup_plot", "figure"),
+    [Input("Setup_graph", "value"), Input("interval", "n_intervals")], )
 def update_graph_status(selected_dropdown_value, _):
     df_setup = get_dataframe()
     data = json.loads(df_setup)
