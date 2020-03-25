@@ -12,7 +12,8 @@ import tasks
 
 redis_instance = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
 
-#tasks.update_segment_data()
+
+# tasks.update_segment_data()
 
 
 def get_dataframe():
@@ -54,7 +55,6 @@ def serve_layout():
             ], className="sms_chart_div", style={"marginBottom": "10"}
         )
     ])
-
 
 
 @app.callback(

@@ -15,6 +15,7 @@ from flask import send_file
 redis_instance = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
 
 tasks.update_setup_data()
+#tasks.insert_mongos_db()
 
 
 def get_dataframe():
@@ -193,7 +194,7 @@ def update_graph_status(selected_dropdown_value, _):
             x=df['Time'],
             y=df[item],
             name=item,
-            text=df[item],
+            text=df['CoilId'],
             line=dict(
                 # color=('rgb(205, 12, 24)'),
                 dash='solid',

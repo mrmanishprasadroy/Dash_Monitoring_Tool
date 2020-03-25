@@ -24,17 +24,17 @@ app.layout = html.Div([
     # indicators row div
     html.Div(
         [
-            dcc.Link('Segment Data Monitor', href='/apps/segment_data', className='button button-primary'),
-            dcc.Link('Measurment Data Monitor', href='/apps/measurement_data', className='button button-primary'),
-            dcc.Link('Strip Tracking Monitor', href='/apps/strip_tracking', className='button button-primary'),
-            dcc.Link('Process Data Monitor', href='/apps/process_data', className='button button-primary'),
-            dcc.Link('Setup Data Monitor', href='/apps/setup_data', className='button button-primary'),
-            dcc.Link('Exit Area Monitor', href='/apps/exit_area', className='button button-primary'),
-            dcc.Link('Coil Id Tracking', href='/apps/coilid_tracking', className='button button-primary'),
+            dcc.Link('Segment Data Monitor', href='/apps/segment_data', className='submit button-primary', style={'marginRight': 25}),
+            dcc.Link('Measurment Data Monitor', href='/apps/measurement_data', className='submit button-primary', style={'marginRight': 25}),
+            dcc.Link('Strip Tracking Monitor', href='/apps/strip_tracking', className='submit button-primary',style={'marginRight': 25}),
+            dcc.Link('Process Data Monitor', href='/apps/process_data', className='submit button-primary', style={'marginRight': 25}),
+            dcc.Link('Setup Data Monitor', href='/apps/setup_data', className='submit button-primary', style={'marginRight': 25}),
+            dcc.Link('Exit Area Monitor', href='/apps/exit_area', className='submit button-primary', style={'marginRight': 25}),
+            dcc.Link('Coil Id Tracking', href='/apps/coilid_tracking', className='submit button-primary', style={'marginRight': 25}),
         ], className="row", ),
     # Hidden divs to contain data
     # html.Div(process_dateset, id="process_dataset_df", style={'display': "none"}),
-    html.Div(id='page-content')
+    html.Div(id='page-content',style={'marginBottom': 50, 'marginTop': 25})
 ])
 
 
