@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import json
-from app import app
+from app import app, dbc
 import pandas as pd
 import os
 import redis
@@ -25,31 +25,37 @@ def get_dataframe():
     return json.loads(jsonified_df)
 
 
+first_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("Coil Tracking", className="card-title"),
+            dbc.Alert(id="status_coilid", color="success"),
+            dbc.Alert("Select From DropDown", color="info"),
+            dcc.Dropdown(
+                id='coilid-dropdown',
+                options=[
+                    {'label': '{}'.format(i), 'value': i} for i in [
+                        'coil_1', 'coil_2', 'coil_3', 'coil_4', 'coil_5', 'coil_6', 'coil_7', 'coil_8',
+                        'coil_9', 'coil_10', 'coil_11', 'coil_12'
+                    ]
+                ],
+                multi=True,
+                value=['coil_1', 'coil_2', 'coil_3', 'coil_4', 'coil_5', 'coil_6', 'coil_7', 'coil_8']
+            ),
+            dcc.Graph(
+                id="coilidTracking_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+
+
 def serve_layout():
     return html.Div([
-        dcc.Dropdown(
-            id='coilid-dropdown',
-            options=[
-                {'label': '{}'.format(i), 'value': i} for i in [
-                    'coil_1', 'coil_2', 'coil_3', 'coil_4', 'coil_5', 'coil_6', 'coil_7', 'coil_8',
-                    'coil_9', 'coil_10', 'coil_11', 'coil_12'
-                ]
-            ],
-            multi=True,
-            value=['coil_1', 'coil_2', 'coil_3', 'coil_4', 'coil_5', 'coil_6', 'coil_7', 'coil_8']
-        ),
-        html.Div(id="status_coilid"),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_coilid"),
-        # Chart Container
-        html.Div(
-            [
-                dcc.Graph(
-                    id="coilidTracking_plot",
-                    config=dict(displayModeBar=False),
-                ),
-            ], className="row", style={"marginBottom": "10"}
-        ),
+        dbc.Row([dbc.Col(first_card, width=12)])
 
     ])
 

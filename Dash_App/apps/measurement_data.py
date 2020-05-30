@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import json
-from app import app
+from app import app,dbc
 import pandas as pd
 import os
 import tasks
@@ -27,6 +27,7 @@ def get_dataframe():
 
 def serve_layout():
     return html.Div([
+        dbc.Alert("Select From DropDown", color="info"),
         dcc.Dropdown(
             id='measurment-dropdown',
             options=[
@@ -39,7 +40,7 @@ def serve_layout():
             multi=True,
             value=['GcsActive G1', 'GcsActive G2', 'GcsActive G3', 'GcsActive G4', 'GcsActive G5']
         ),
-        html.Div(id="status_meas"),
+        dbc.Alert(id="status_meas", color="success"),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_meas"),
         # Chart Container

@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import json
-from app import app
+from app import app,dbc
 import pandas as pd
 import os
 import redis
@@ -25,40 +25,49 @@ def get_dataframe():
     return json.loads(jsonified_df)
 
 
+first_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("Strip Plot", className="card-title"),
+            dcc.Graph(
+                id="strip_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+
+second_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("Coil Plot", className="card-title"),
+            dcc.Graph(
+                id="coil_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+
+
 def serve_layout():
     return html.Div([
+        dbc.Alert("Select From DropDown", color="info"),
         dcc.Dropdown(
             id='stand-dropdown',
             options=[
                 {'label': '{}'.format(i), 'value': i} for i in [
-                    'Stand 1', 'Stand 2', 'Stand 3', 'Stand 4', 'Stand 5'
+                    'Stand 1', 'Stand 2'
                 ]
             ],
             multi=True,
-            value=['Stand 1', 'Stand 2', 'Stand 3', 'Stand 4', 'Stand 5']
+            value=['Stand 1', 'Stand 2']
         ),
-        html.Div(id="status_strip"),
+        dbc.Alert(id="status_strip", color="success"),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_strip"),
-        # Chart Container
-        html.Div(
-            [
-                dcc.Graph(
-                    id="strip_plot",
-                    config=dict(displayModeBar=False),
-                ),
-            ], className="row", style={"marginBottom": "10"}
-        ),
-
-        # Chart Container
-        html.Div(
-            [
-                dcc.Graph(
-                    id="coil_plot",
-                    config=dict(displayModeBar=False),
-                ),
-            ], className="row", style={"marginBottom": "10"}
-        )
+        # Cards
+        dbc.Row([dbc.Col(first_card, width=6), dbc.Col(second_card, width=6)])
     ])
 
 

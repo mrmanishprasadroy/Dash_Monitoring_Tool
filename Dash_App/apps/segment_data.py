@@ -6,7 +6,7 @@ import pandas as pd
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from telegram_definition_L1 import *
-from app import app
+from app import app,dbc
 import os
 import tasks
 
@@ -32,6 +32,7 @@ def serve_layout():
         # third Controls
         html.Div(
             [
+                dbc.Alert("Select From DropDown", color="info"),
                 dcc.Dropdown(
                     id='item-list',
                     options=[
@@ -40,9 +41,9 @@ def serve_layout():
                     multi=True,
                     value=[teltype_M21[0][0]]
                 ),
-                html.Div(id="status_seg"),
-            ], className="row", style={"marginBottom": "10"}
+            ],
         ),
+        dbc.Alert(id="status_seg", color="success"),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_seg"),
         # Chart Container

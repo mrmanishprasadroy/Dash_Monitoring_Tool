@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import json
-from app import app
+from app import app,dbc
 import pandas as pd
 import os
 import redis
@@ -25,8 +25,34 @@ def get_dataframe():
     return json.loads(jsonified_df)
 
 
+first_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("Exit Plot", className="card-title"),
+            dcc.Graph(
+                id="exit_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+
+
+second_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("Exit Coilid Plot", className="card-title"),
+            dcc.Graph(
+                id="coilid_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+
 def serve_layout():
     return html.Div([
+        dbc.Alert("Select From DropDown", color="info"),
         dcc.Dropdown(
             id='exitarea-dropdown',
             options=[
@@ -37,28 +63,10 @@ def serve_layout():
             multi=True,
             value=['strip_length_1', 'strip_length_2']
         ),
-        html.Div(id="status_coiler"),
+        dbc.Alert(id="status_coiler",color="success"),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_coiler"),
-        # Chart Container
-        html.Div(
-            [
-                dcc.Graph(
-                    id="exit_plot",
-                    config=dict(displayModeBar=False),
-                ),
-            ], className="row", style={"marginBottom": "10"}
-        ),
-
-        # Chart Container
-        html.Div(
-            [
-                dcc.Graph(
-                    id="coilid_plot",
-                    config=dict(displayModeBar=False),
-                ),
-            ], className="row", style={"marginBottom": "10"}
-        )
+        dbc.Row([dbc.Col(first_card, width=6), dbc.Col(second_card, width=6)]),
     ])
 
 

@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import json
 import dash_table
-from app import app
+from app import app,dbc
 import redis
 import tasks
 from setup_data import *
@@ -37,69 +37,67 @@ columns = list(col.columns.values)
 coil_arr = coils.CoilIdOut.unique()
 
 
-def serve_layout():
-    return html.Div([
-        html.Div([
-            html.Div(
-                dcc.Dropdown(
-                    id='coilId',
-                    options=[
-                        {'label': '{}'.format(i), 'value': i} for i in coil_arr
-                    ],
-                    value=coil_arr[0]
-                ), className="two columns",
+first_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("Setup  Data", className="card-title"),
+            dcc.Dropdown(
+                id='coilId',
+                options=[
+                    {'label': '{}'.format(i), 'value': i} for i in coil_arr
+                ],
+                value=coil_arr[0]
             ),
-            html.Div(
-                html.A('Download Whole Dataset', id='my-link', className='button button-primary'),
-                className="two columns"
-            ),
-            html.Div(children='''
-                                SetUp Varaibal For Plotting
-                    ''', className="two columns"),
-            html.Div(
-                dcc.Dropdown(
-                    id='Setup_graph',
-                    options=[
-                        {'label': '{}'.format(i), 'value': i} for i in columns
-                    ],
-                    multi=True,
-                    value=[columns[4]]
-                ), className="three columns",
-            ),
-            html.Div(id="status"),
-        ], className="row"),
-
-        html.Div([
-            # Interval
-            dcc.Interval(interval=30 * 1000, id="interval"),
-            # table div
             dcc.Loading(id='table-view', children=html.Div(
                 id="setup_table",
                 # className="row",
                 style={
-                    "maxHeight": "650px",
+                    "maxHeight": "41rem",
                     "overflowY": "scroll",
                     "padding": "8",
                     "marginTop": "15",
                     "backgroundColor": "white",
                     "border": "1px solid #C8D4E3",
-                    "borderRadius": "3px"},
-            ),
-                        )
-
-        ], className="row"),
-        html.Div([
-            # Chart Container
+                    "borderRadius": "3px"},),
+                        ),
             html.Div(
-                [
-                    dcc.Graph(
-                        id="setup_plot",
-                        config=dict(displayModeBar=False),
-                    ),
-                ], className="sms_chart_div", style={"marginBottom": "10"}
-            )
+                html.A('Download Whole Dataset', id='my-link', className='button button-primary'),
+                className="two columns"
+            ),
 
-        ], className="row")
+        ]
+    )
+)
+
+second_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("SetUp Varaibal For Plotting", className="card-title"),
+            dcc.Dropdown(
+                id='Setup_graph',
+                options=[
+                    {'label': '{}'.format(i), 'value': i} for i in columns
+                ],
+                multi=True,
+                value=[columns[4]]
+            ),
+            dcc.Graph(
+                id="setup_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+
+
+def serve_layout():
+    return html.Div([
+        # Status
+        dbc.Alert(id="status", color='success'),
+        # Interval
+        dcc.Interval(interval=30 * 1000, id="interval"),
+        # Cards
+        dbc.Row([dbc.Col(first_card, width=6), dbc.Col(second_card, width=6)])
     ])
 
 

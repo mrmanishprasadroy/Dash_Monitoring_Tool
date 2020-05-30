@@ -6,7 +6,7 @@ import pandas as pd
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from telegram_definition_L1 import *
-from app import app
+from app import app, dbc
 import os
 import tasks
 
@@ -26,113 +26,94 @@ def get_dataframe():
     return json.loads(jsonified_df)
 
 
+first_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("At Stand", className="card-title"),
+            dcc.Dropdown(
+                id='atstand-list',
+                options=[
+                    {'label': '{}'.format(teltype_M21[i][0]), 'value': teltype_M21[i][0]} for i in range(0, 125)
+                ],
+                multi=True,
+                value=[teltype_M21[0][0]]
+            ),
+            dcc.Graph(
+                id="atstand_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+
+second_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("Between  Stand", className="card-title"),
+            dcc.Dropdown(
+                id='betweenstand-list',
+                options=[
+                    {'label': '{}'.format(teltype_M22[i][0]), 'value': teltype_M22[i][0]} for i in range(0, 47)
+                ],
+                multi=True,
+                value=[teltype_M22[0][0]]
+            ),
+            dcc.Graph(
+                id="betweenstand_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+
+third_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("Before First Stand", className="card-title"),
+            dcc.Dropdown(
+                id='beforfirststand-list',
+                options=[
+                    {'label': '{}'.format(teltype_M23[i][0]), 'value': teltype_M23[i][0]} for i in range(0, 47)
+                ],
+                multi=True,
+                value=[teltype_M23[0][0]]
+            ),
+            dcc.Graph(
+                id="beforfirststand_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+fourth_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.H5("After Last Stand", className="card-title"),
+            dcc.Dropdown(
+                id='afterlaststand-list',
+                options=[
+                    {'label': '{}'.format(teltype_M24[i][0]), 'value': teltype_M24[i][0]} for i in range(0, 67)
+                ],
+                multi=True,
+                value=[teltype_M24[0][0]]
+            ),
+            dcc.Graph(
+                id="afterlaststand_plot",
+                config=dict(displayModeBar=False),
+            ),
+        ]
+    )
+)
+
+
 def serve_layout():
     return html.Div([
-        html.Div(id="status_pseg"),
+        dbc.Alert(id="status_pseg",color='success'),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_pseg"),
-        # First Controls
-        html.Div(
-            [
-                html.Div(
-                    dcc.Dropdown(
-                        id='atstand-list',
-                        options=[
-                            {'label': '{}'.format(teltype_M21[i][0]), 'value': teltype_M21[i][0]} for i in range(0, 125)
-                        ],
-                        multi=True,
-                        value=[teltype_M21[0][0]]
-                    ), className="six columns",
-
-                ),
-
-                html.Div(
-                    dcc.Dropdown(
-                        id='betweenstand-list',
-                        options=[
-                            {'label': '{}'.format(teltype_M22[i][0]), 'value': teltype_M22[i][0]} for i in range(0, 47)
-                        ],
-                        multi=True,
-                        value=[teltype_M22[0][0]]
-                    ), className="six columns",
-
-                ),
-
-            ], className="row", style={"marginBottom": "10"}
-        ),
-
-        # First Chart Container
-        html.Div(
-            [
-                html.Div(
-                    dcc.Graph(
-                        id="atstand_plot",
-                        config=dict(displayModeBar=False),
-                    ), className="six columns",
-
-                ),
-
-                html.Div(
-                    dcc.Graph(
-                        id="betweenstand_plot",
-                        config=dict(displayModeBar=False),
-                    ), className="six columns",
-
-                ),
-            ], className="row", style={"marginBottom": "10"}
-        ),
-
-        # Second Controls
-        html.Div(
-            [
-                html.Div(
-                    dcc.Dropdown(
-                        id='beforfirststand-list',
-                        options=[
-                            {'label': '{}'.format(teltype_M23[i][0]), 'value': teltype_M23[i][0]} for i in range(0, 47)
-                        ],
-                        multi=True,
-                        value=[teltype_M23[0][0]]
-                    ), className="six columns",
-
-                ),
-
-                html.Div(
-                    dcc.Dropdown(
-                        id='afterlaststand-list',
-                        options=[
-                            {'label': '{}'.format(teltype_M24[i][0]), 'value': teltype_M24[i][0]} for i in range(0, 67)
-                        ],
-                        multi=True,
-                        value=[teltype_M24[0][0]]
-                    ), className="six columns",
-
-                ),
-
-            ], className="row", style={"marginBottom": "10"}
-        ),
-
-        # Second Chart Container
-        html.Div(
-            [
-                html.Div(
-                    dcc.Graph(
-                        id="beforfirststand_plot",
-                        config=dict(displayModeBar=False),
-                    ), className="six columns",
-
-                ),
-
-                html.Div(
-                    dcc.Graph(
-                        id="afterlaststand_plot",
-                        config=dict(displayModeBar=False),
-                    ), className="six columns",
-
-                ),
-            ], className="row", style={"marginBottom": "10"}
-        ),
-
+        # Cards
+        dbc.Row([dbc.Col(first_card, width=6), dbc.Col(second_card, width=6)]),
+        dbc.Row([dbc.Col(third_card, width=6), dbc.Col(fourth_card, width=6)])
     ])
 
 
@@ -299,7 +280,7 @@ def display_value(selected_dropdown_value, _):
                 width=2,
                 dash='solid')
         ))
-    traces = [trace2, trace4, trace6,  trace8]
+    traces = [trace2, trace4, trace6, trace8]
     data = [val for sublist in traces for val in sublist]
 
     # Edit the layout
@@ -319,7 +300,6 @@ def display_value(selected_dropdown_value, _):
     # Plot and embed
     fig = dict(data=data, layout=layout)
     return fig
-
 
 
 @app.callback(

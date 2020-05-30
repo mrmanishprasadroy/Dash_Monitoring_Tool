@@ -28,17 +28,17 @@ CONTENT_STYLE = {
 sidebar = html.Div(
     [
         dbc.CardImg(src="assets/logo.png", top=True),
-        html.H2("PLTCM  Monitoring Tool", className="display-4"),
+        html.H2("PLTCM Monitoring", className="display-4"),
         html.Hr(),
         dbc.Nav(
             [
-                dbc.NavLink('Segment Data Monitor', href='/apps/segment_data'),
-                dbc.NavLink('Measurements Data Monitor', href='/apps/measurement_data'),
-                dbc.NavLink('Strip Tracking Monitor', href='/apps/strip_tracking'),
-                dbc.NavLink('Process Data Monitor', href='/apps/process_data'),
-                dbc.NavLink('Setup Data Monitor', href='/apps/setup_data'),
-                dbc.NavLink('Exit Area Monitor', href='/apps/exit_area'),
-                dbc.NavLink('Coil Id Tracking', href='/apps/coilid_tracking'),
+                dbc.NavLink('Segment Data ', href='/apps/segment_data'),
+                dbc.NavLink('Measurements Data ', href='/apps/measurement_data'),
+                dbc.NavLink('Strip Tracking ', href='/apps/strip_tracking'),
+                dbc.NavLink('Process Data ', href='/apps/process_data'),
+                dbc.NavLink('Setup Data ', href='/apps/setup_data'),
+                dbc.NavLink('Exit Area Tracking', href='/apps/exit_area'),
+                dbc.NavLink('CoilId Tracking', href='/apps/coilid_tracking'),
             ],
             vertical=True,
             pills=True,
