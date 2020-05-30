@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import json
 import dash_table
-from app import app,dbc
+from app import app, dbc
 import redis
 import tasks
 from setup_data import *
@@ -15,7 +15,9 @@ from flask import send_file
 redis_instance = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
 
 tasks.update_setup_data()
-#tasks.insert_mongos_db()
+
+
+# tasks.insert_mongos_db()
 
 
 def get_dataframe():
@@ -35,7 +37,6 @@ coils = pd.read_json(data['df_00'], orient='split')
 col = pd.read_json(data['df_01'], orient='split')
 columns = list(col.columns.values)
 coil_arr = coils.CoilIdOut.unique()
-
 
 first_card = dbc.Card(
     dbc.CardBody(
@@ -58,8 +59,7 @@ first_card = dbc.Card(
                     "marginTop": "15",
                     "backgroundColor": "white",
                     "border": "1px solid #C8D4E3",
-                    "borderRadius": "3px"},),
-                        ),
+                    "borderRadius": "3px"}), type="cube"),
             html.Div(
                 html.A('Download Whole Dataset', id='my-link', className='button button-primary'),
                 className="two columns"
