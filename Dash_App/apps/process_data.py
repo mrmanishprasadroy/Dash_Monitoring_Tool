@@ -108,7 +108,7 @@ fourth_card = dbc.Card(
 
 def serve_layout():
     return html.Div([
-        dbc.Alert(id="status_pseg",color='success'),
+        dbc.Alert(id="status_pseg", color='success'),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_pseg"),
         # Cards
