@@ -112,8 +112,16 @@ def serve_layout():
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_pseg"),
         # Cards
-        dbc.Row([dbc.Col(first_card, width=6), dbc.Col(second_card, width=6)]),
-        dbc.Row([dbc.Col(third_card, width=6), dbc.Col(fourth_card, width=6)])
+        dbc.Row(
+            [
+                dbc.Col(dbc.Card(first_card, color='dark', outline=True), width=6),
+                dbc.Col(dbc.Card(second_card, color='dark', outline=True), width=6)
+            ]),
+        dbc.Row(
+            [
+                dbc.Col(dbc.Card(third_card, color='dark', outline=True), width=6),
+                dbc.Col(dbc.Card(fourth_card, color='dark', outline=True), width=6)
+            ])
     ])
 
 

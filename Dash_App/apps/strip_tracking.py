@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import json
-from app import app,dbc
+from app import app, dbc
 import pandas as pd
 import os
 import redis
@@ -24,6 +24,24 @@ def get_dataframe():
     # df = pd.DataFrame(json.loads(jsonified_df))
     return json.loads(jsonified_df)
 
+
+content_card = dbc.Card(
+    dbc.CardBody([
+        dbc.Alert(id="status_strip", color="success"),
+        dbc.Alert("Select From DropDown", color="info"),
+        dcc.Dropdown(
+            id='stand-dropdown',
+            options=[
+                {'label': '{}'.format(i), 'value': i} for i in [
+                    'Stand 1', 'Stand 2'
+                ]
+            ],
+            multi=True,
+            value=['Stand 1', 'Stand 2']
+        ),
+
+    ])
+)
 
 first_card = dbc.Card(
     dbc.CardBody(
@@ -52,24 +70,16 @@ second_card = dbc.Card(
 
 def serve_layout():
     return html.Div([
-        dbc.Alert("Select From DropDown", color="info"),
-        dcc.Dropdown(
-            id='stand-dropdown',
-            options=[
-                {'label': '{}'.format(i), 'value': i} for i in [
-                    'Stand 1', 'Stand 2'
-                ]
-            ],
-            multi=True,
-            value=['Stand 1', 'Stand 2']
-        ),
-        dbc.Alert(id="status_strip", color="success"),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_strip"),
         # Cards
-        dbc.Row([dbc.Col(first_card, width=6), dbc.Col(second_card, width=6)])
+        dbc.Row([dbc.Col(dbc.Card(content_card,color="primary", outline=True), width=12)]),
+        dbc.Row(
+            [
+                dbc.Col(dbc.Card(first_card,color="success", inverse=True), width=6),
+                dbc.Col(dbc.Card(second_card, color="success", inverse=True), width=6)
+            ])
     ])
-
 
 
 @app.callback(

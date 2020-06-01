@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import json
-from app import app,dbc
+from app import app, dbc
 import pandas as pd
 import os
 import tasks
@@ -25,33 +25,48 @@ def get_dataframe():
     return json.loads(jsonified_df)
 
 
+first_card = dbc.Card(
+    dbc.CardBody(
+        [
+            dbc.Alert(id="status_meas", color="success"),
+            dbc.Alert("Select From DropDown", color="info"),
+            dcc.Dropdown(
+                id='measurment-dropdown',
+                options=[
+                    {'label': '{}'.format(i), 'value': i} for i in [
+                        'Thickness 1', 'Length 1', 'StripSpeed 1', 'GcsActive G1', 'GcsActive G2', 'GcsActive G3',
+                        'GcsActive G4', 'GcsActive G5', 'FcsActive G1', 'FcsActive G2', 'FcsActive G3', 'FcsActive G4',
+                        'FcsActive G5'
+                    ]
+                ],
+                multi=True,
+                value=['GcsActive G1', 'GcsActive G2', 'GcsActive G3', 'GcsActive G4', 'GcsActive G5']
+            ),
+            # Chart Container
+            html.Div(
+                [
+                    dcc.Graph(
+                        id="meas_plot",
+                        config=dict(displayModeBar=False),
+                    ),
+                ], className="sms_chart_div", style={"marginBottom": "10"}
+            )
+        ]
+    )
+)
+
+
 def serve_layout():
     return html.Div([
-        dbc.Alert("Select From DropDown", color="info"),
-        dcc.Dropdown(
-            id='measurment-dropdown',
-            options=[
-                {'label': '{}'.format(i), 'value': i} for i in [
-                    'Thickness 1', 'Length 1', 'StripSpeed 1', 'GcsActive G1', 'GcsActive G2', 'GcsActive G3',
-                    'GcsActive G4', 'GcsActive G5', 'FcsActive G1', 'FcsActive G2', 'FcsActive G3', 'FcsActive G4',
-                    'FcsActive G5'
-                ]
-            ],
-            multi=True,
-            value=['GcsActive G1', 'GcsActive G2', 'GcsActive G3', 'GcsActive G4', 'GcsActive G5']
-        ),
-        dbc.Alert(id="status_meas", color="success"),
+
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_meas"),
-        # Chart Container
-        html.Div(
+        # Cards
+        dbc.Row(
             [
-                dcc.Graph(
-                    id="meas_plot",
-                    config=dict(displayModeBar=False),
-                ),
-            ], className="sms_chart_div", style={"marginBottom": "10"}
-        )
+                dbc.Col(dbc.Card(first_card, color="primary", outline=True), width=12)
+            ]),
+
     ])
 
 

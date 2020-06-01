@@ -41,6 +41,17 @@ first_card = dbc.Card(
 second_card = dbc.Card(
     dbc.CardBody(
         [
+            dbc.Alert("Select From DropDown", color="info"),
+            dcc.Dropdown(
+                id='exitarea-dropdown',
+                options=[
+                    {'label': '{}'.format(i), 'value': i} for i in [
+                        'strip_length_1', 'strip_length_2', 'coiler_in_use'
+                    ]
+                ],
+                multi=True,
+                value=['strip_length_1', 'strip_length_2']
+            ),
             html.H5("Exit Coilid Plot", className="card-title"),
             dcc.Graph(
                 id="coilid_plot",
@@ -52,17 +63,7 @@ second_card = dbc.Card(
 
 def serve_layout():
     return html.Div([
-        dbc.Alert("Select From DropDown", color="info"),
-        dcc.Dropdown(
-            id='exitarea-dropdown',
-            options=[
-                {'label': '{}'.format(i), 'value': i} for i in [
-                    'strip_length_1', 'strip_length_2', 'coiler_in_use'
-                ]
-            ],
-            multi=True,
-            value=['strip_length_1', 'strip_length_2']
-        ),
+
         dbc.Alert(id="status_coiler",color="success"),
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_coiler"),

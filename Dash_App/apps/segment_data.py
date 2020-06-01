@@ -6,7 +6,7 @@ import pandas as pd
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from telegram_definition_L1 import *
-from app import app,dbc
+from app import app, dbc
 import os
 import tasks
 
@@ -27,34 +27,49 @@ def get_dataframe():
     return json.loads(jsonified_df)
 
 
+first_card = dbc.Card(
+    dbc.CardBody(
+        [
+            html.Div(
+                [
+                    # third Controls
+                    dbc.Alert(id="status_seg", color="success"),
+                    dbc.Alert("Select From DropDown", color="info"),
+                    dcc.Dropdown(
+                        id='item-list',
+                        options=[
+                            {'label': '{}'.format(teltype_M21[i][0]), 'value': teltype_M21[i][0]} for i in range(0, 13)
+                        ],
+                        multi=True,
+                        value=[teltype_M21[0][0]]
+                    ),
+                ],
+            ),
+            # Chart Container
+            html.Div(
+                [
+                    dcc.Graph(
+                        id="segment_plot",
+                        config=dict(displayModeBar=False),
+                    ),
+                ], className="sms_chart_div", style={"marginBottom": "10"}
+            )
+        ]
+    )
+)
+
+
 def serve_layout():
     return html.Div([
-        # third Controls
-        html.Div(
-            [
-                dbc.Alert("Select From DropDown", color="info"),
-                dcc.Dropdown(
-                    id='item-list',
-                    options=[
-                        {'label': '{}'.format(teltype_M21[i][0]), 'value': teltype_M21[i][0]} for i in range(0, 13)
-                    ],
-                    multi=True,
-                    value=[teltype_M21[0][0]]
-                ),
-            ],
-        ),
-        dbc.Alert(id="status_seg", color="success"),
+
         # Interval
         dcc.Interval(interval=30 * 1000, id="interval_seg"),
-        # Chart Container
-        html.Div(
+        # Cards
+        dbc.Row(
             [
-                dcc.Graph(
-                    id="segment_plot",
-                    config=dict(displayModeBar=False),
-                ),
-            ], className="sms_chart_div", style={"marginBottom": "10"}
-        )
+                dbc.Col(dbc.Card(first_card,color="primary", outline=True), width=12)
+            ]),
+
     ])
 
 
