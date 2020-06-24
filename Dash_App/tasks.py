@@ -1,4 +1,5 @@
 import plotly
+import pymongo
 import redis
 from celery import Celery
 
@@ -8,12 +9,13 @@ from measurment_data import *
 from srtip_tracking_data import *
 from coiler_exit_data import *
 from coil_id_tracking_data import *
-#from pymongo import MongoClient
+from pymongo import MongoClient
 
 celery_app = Celery("Celery App", broker=os.environ["REDIS_URL"])
 redis_instance = redis.StrictRedis.from_url(os.environ["REDIS_URL"])
-#client  = MongoClient('mongodb://localhost:27017')
-#db = client["TCM_TLG"]
+# mongodb_uri = "mongodb://root:secret@127.0.0.1:27017"
+# client = MongoClient(mongodb_uri)
+# db = client["TCM_TLG"]
 
 REDIS_HASH_NAME = os.environ.get("DASH_APP_NAME", "app-data")
 REDIS_KEYS = {"DATASETUP": "DATASETUP",
