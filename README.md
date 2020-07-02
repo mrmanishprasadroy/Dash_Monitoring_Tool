@@ -15,5 +15,5 @@ This app is ported from tinkerit to dash to monitor all the logs of PLTCM
 
 
 # Expermental FLower Dash Board
-    # celery flower -A tasks --address=127.0.0.1 --port=5555
+        # celery flower -A tasks --address=127.0.0.1 --port=5555
 
