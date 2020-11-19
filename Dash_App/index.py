@@ -50,6 +50,7 @@ sidebar = html.Div(
 content = html.Div(id="page-content", style=CONTENT_STYLE)
 
 app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
+app.title = 'XSense'
 
 
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
